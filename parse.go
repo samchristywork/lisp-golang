@@ -4,6 +4,21 @@ import (
 	"strconv"
 )
 
+func findRightParen(tokens []string) int {
+	count := 1
+	for i, token := range tokens {
+		if token == "(" {
+			count++
+		} else if token == ")" {
+			count--
+		}
+		if count == 0 {
+			return i
+		}
+	}
+	panic("unbalanced parentheses")
+}
+
 func tokenize(input string) []string {
 	tokens := []string{}
 
