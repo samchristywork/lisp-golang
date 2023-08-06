@@ -79,11 +79,17 @@ func divide(e Expr, env *Env) Expr {
 	return Expr{NUMBER, a.value.(float64) / b.value.(float64), nil, nil}
 }
 
-func _print(e Expr, env *Env) Expr {
-	fmt.Println(eval(&e, env).value)
+func __print(e Expr, env *Env) {
+	fmt.Print(eval(&e, env).value)
 	if e.next != nil {
-		_print(*e.next, env)
+		__print(*e.next, env)
 	}
+}
+
+func _print(e Expr, env *Env) Expr {
+	__print(e, env)
+	fmt.Println()
+
 	return Expr{NULL, nil, nil, nil}
 }
 
