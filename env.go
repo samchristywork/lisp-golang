@@ -13,72 +13,6 @@ func addEnv(env *Env, key string, value Expr) {
 	env.data[key] = value
 }
 
-func equals(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != b.kind {
-		return Expr{BOOL, false, nil, nil}
-	}
-
-	if a.value == b.value {
-		return Expr{BOOL, true, nil, nil}
-	} else {
-		return Expr{BOOL, false, nil, nil}
-	}
-}
-
-func notEquals(e Expr, env *Env) Expr {
-	if equals(e, env).value.(bool) {
-		return Expr{BOOL, false, nil, nil}
-	}
-	return Expr{BOOL, true, nil, nil}
-}
-
-func plus(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != NUMBER || b.kind != NUMBER {
-		panic("plus requires two numbers")
-	}
-
-	return Expr{NUMBER, a.value.(float64) + b.value.(float64), nil, nil}
-}
-
-func minus(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != NUMBER || b.kind != NUMBER {
-		panic("minus requires two numbers")
-	}
-
-	return Expr{NUMBER, a.value.(float64) - b.value.(float64), nil, nil}
-}
-
-func multiply(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != NUMBER || b.kind != NUMBER {
-		panic("multiply requires two numbers")
-	}
-
-	return Expr{NUMBER, a.value.(float64) * b.value.(float64), nil, nil}
-}
-
-func divide(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != NUMBER || b.kind != NUMBER {
-		panic("divide requires two numbers")
-	}
-
-	return Expr{NUMBER, a.value.(float64) / b.value.(float64), nil, nil}
-}
-
 func __print(e Expr, env *Env) {
 	fmt.Print(eval(&e, env).value)
 	if e.next != nil {
@@ -132,17 +66,6 @@ func _if(e Expr, env *Env) Expr {
 	}
 }
 
-func lessThan(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.next, env)
-
-	if a.kind != NUMBER || b.kind != NUMBER {
-		panic("lessThan requires two numbers")
-	}
-
-	return Expr{BOOL, a.value.(float64) < b.value.(float64), nil, nil}
-}
-
 func initEnv() *Env {
 	env := &Env{nil, make(map[string]Expr)}
 	// Control Flow
@@ -156,13 +79,26 @@ func initEnv() *Env {
 	addEnv(env, "/", Expr{FUNCTION, divide, nil, nil})
 
 	// Comparison
+	addEnv(env, "=", Expr{FUNCTION, equals, nil, nil})
 	addEnv(env, "!=", Expr{FUNCTION, notEquals, nil, nil})
 	addEnv(env, "<", Expr{FUNCTION, lessThan, nil, nil})
-	addEnv(env, "=", Expr{FUNCTION, equals, nil, nil})
+	addEnv(env, ">", Expr{FUNCTION, greaterThan, nil, nil})
+	addEnv(env, "<=", Expr{FUNCTION, lessThanEquals, nil, nil})
+	addEnv(env, ">=", Expr{FUNCTION, greaterThanEquals, nil, nil})
+
+	// Logic
+	addEnv(env, "and", Expr{FUNCTION, and, nil, nil})
+	addEnv(env, "or", Expr{FUNCTION, or, nil, nil})
+	addEnv(env, "not", Expr{FUNCTION, not, nil, nil})
+	addEnv(env, "xor", Expr{FUNCTION, xor, nil, nil})
+	addEnv(env, "nor", Expr{FUNCTION, nor, nil, nil})
+	addEnv(env, "nand", Expr{FUNCTION, nand, nil, nil})
+	addEnv(env, "xnor", Expr{FUNCTION, xnor, nil, nil})
 
 	// Constants
 	addEnv(env, "false", Expr{BOOL, false, nil, nil})
 	addEnv(env, "true", Expr{BOOL, true, nil, nil})
+	addEnv(env, "null", Expr{NULL, nil, nil, nil})
 
 	// Variables
 	addEnv(env, "define", Expr{FUNCTION, define, nil, nil})
