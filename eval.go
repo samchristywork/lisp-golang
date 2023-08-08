@@ -117,3 +117,9 @@ func eval(expr *Expr, env *Env) Expr {
 
 	return result
 }
+
+func evalNew(expr *Expr) Expr {
+	env := initEnv()
+
+	return eval(expr, env)
+}
