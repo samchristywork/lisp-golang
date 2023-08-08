@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 )
 
 type Env struct {
@@ -15,6 +17,7 @@ func addEnv(env *Env, key string, value Expr) {
 
 func __print(e Expr, env *Env) {
 	fmt.Print(eval(&e, env).value)
+
 	if e.next != nil {
 		__print(*e.next, env)
 	}
@@ -43,15 +46,56 @@ func begin(e Expr, env *Env) Expr {
 	return ret
 }
 
+func loop(e Expr, env *Env) Expr {
+	ret := Expr{NULL, nil, nil, nil}
+
+	head := e
+
+	for {
+		ret = eval(&e, env)
+
+		if e.next == nil {
+			if ret.kind == BOOL {
+				if ret.value.(bool) {
+				} else {
+					break
+				}
+			} else {
+				panic("loop requires a boolean expression")
+			}
+
+			e = head
+			continue
+		}
+
+		e = *e.next
+	}
+
+	return ret
+}
+
+func set(e Expr, env *Env) Expr {
+	key := eval(&e, env)
+	value := eval(e.next, env)
+
+	if key.kind != SYMBOL {
+		panic("set requires a symbol")
+	}
+
+	addEnv(env, key.value.(string), eval(&value, env))
+
+	return Expr{NULL, nil, nil, nil}
+}
+
 func define(e Expr, env *Env) Expr {
-	key := e
-	value := e.next
+	key := eval(&e, env)
+	value := eval(e.next, env)
 
 	if key.kind != SYMBOL {
 		panic("define requires a symbol")
 	}
 
-	addEnv(env, key.value.(string), eval(value, env))
+	addEnv(env, key.value.(string), eval(&value, env))
 
 	return Expr{NULL, nil, nil, nil}
 }
@@ -59,18 +103,27 @@ func define(e Expr, env *Env) Expr {
 func _if(e Expr, env *Env) Expr {
 	condition := eval(&e, env)
 
-	if condition.value.(bool) {
+	if condition.value.(bool) { // Consequent
+		e.next.next = nil
 		return eval(e.next, env)
-	} else {
+
+	} else { // Alternative
 		return eval(e.next.next, env)
 	}
 }
 
 func initEnv() *Env {
 	env := &Env{nil, make(map[string]Expr)}
-	// Control Flow
+
+	// Data and Control Flow
+	addEnv(env, "assert", Expr{FUNCTION, assert, nil, nil})
 	addEnv(env, "begin", Expr{FUNCTION, begin, nil, nil})
+	addEnv(env, "define", Expr{FUNCTION, define, nil, nil})
 	addEnv(env, "if", Expr{FUNCTION, _if, nil, nil})
+	addEnv(env, "lambda", Expr{FUNCTION, lambda, nil, nil})
+	addEnv(env, "loop", Expr{FUNCTION, loop, nil, nil})
+	addEnv(env, "pambda", Expr{FUNCTION, pambda, nil, nil})
+	addEnv(env, "set", Expr{FUNCTION, set, nil, nil})
 
 	// Arithmetic
 	addEnv(env, "+", Expr{FUNCTION, plus, nil, nil})
@@ -96,14 +149,18 @@ func initEnv() *Env {
 	addEnv(env, "xnor", Expr{FUNCTION, xnor, nil, nil})
 
 	// Constants
-	addEnv(env, "false", Expr{BOOL, false, nil, nil})
 	addEnv(env, "true", Expr{BOOL, true, nil, nil})
+	addEnv(env, "false", Expr{BOOL, false, nil, nil})
 	addEnv(env, "null", Expr{NULL, nil, nil, nil})
-
-	// Variables
-	addEnv(env, "define", Expr{FUNCTION, define, nil, nil})
 
 	// I/O
 	addEnv(env, "print", Expr{FUNCTION, _print, nil, nil})
+	addEnv(env, "system", Expr{FUNCTION, system, nil, nil})
+
+	// Debug
+	addEnv(env, "env", Expr{FUNCTION, showEnv, nil, nil})
+	addEnv(env, "inspect", Expr{FUNCTION, inspect, nil, nil})
+	addEnv(env, "lookup", Expr{FUNCTION, lookupValue, nil, nil})
+
 	return env
 }

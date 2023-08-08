@@ -3,6 +3,8 @@ package main
 func plus(e Expr, env *Env) Expr {
 	a := eval(&e, env)
 	b := eval(e.next, env)
+	a.next = nil
+	b.next = nil
 
 	if a.kind != NUMBER || b.kind != NUMBER {
 		panic("plus requires two numbers")
@@ -14,6 +16,8 @@ func plus(e Expr, env *Env) Expr {
 func minus(e Expr, env *Env) Expr {
 	a := eval(&e, env)
 	b := eval(e.next, env)
+	a.next = nil
+	b.next = nil
 
 	if a.kind != NUMBER || b.kind != NUMBER {
 		panic("minus requires two numbers")
@@ -25,6 +29,8 @@ func minus(e Expr, env *Env) Expr {
 func multiply(e Expr, env *Env) Expr {
 	a := eval(&e, env)
 	b := eval(e.next, env)
+	a.next = nil
+	b.next = nil
 
 	if a.kind != NUMBER || b.kind != NUMBER {
 		panic("multiply requires two numbers")
@@ -36,6 +42,8 @@ func multiply(e Expr, env *Env) Expr {
 func divide(e Expr, env *Env) Expr {
 	a := eval(&e, env)
 	b := eval(e.next, env)
+	a.next = nil
+	b.next = nil
 
 	if a.kind != NUMBER || b.kind != NUMBER {
 		panic("divide requires two numbers")
