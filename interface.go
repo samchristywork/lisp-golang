@@ -41,7 +41,7 @@ func repl() {
 
 		expression := parse(input)
 		value := eval(expression, env)
-		fmt.Println(value.value)
+		fmt.Println(value.Value)
 	}
 }
 

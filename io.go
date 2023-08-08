@@ -5,10 +5,10 @@ import (
 )
 
 func __print(e Expr, env *Env) {
-	fmt.Print(eval(&e, env).value)
+	fmt.Print(eval(&e, env).Value)
 
-	if e.next != nil {
-		__print(*e.next, env)
+	if e.Next != nil {
+		__print(*e.Next, env)
 	}
 }
 

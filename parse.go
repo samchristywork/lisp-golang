@@ -65,36 +65,36 @@ func handleList(expr *Expr, tokens []string) {
 
 	if right_paren_index != 0 {
 		child := Expr{LIST, nil, nil, nil}
-		expr.child = &child
+		expr.Child = &child
 		buildExpressionTree(&child, tokens[:right_paren_index])
 	}
 
 	if len(tokens) > right_paren_index+1 {
 		next := Expr{LIST, nil, nil, nil}
-		expr.next = &next
+		expr.Next = &next
 		buildExpressionTree(&next, tokens[right_paren_index+1:])
 	}
 }
 
 func handleAtom(expr *Expr, token string, tokens []string) {
 	if len(token) > 0 && token[0] == '"' { // Handle Strings
-		expr.kind = STRING
-		expr.value = token[1 : len(token)-1]
+		expr.Kind = STRING
+		expr.Value = token[1 : len(token)-1]
 
 	} else { // Handle Numbers and Symbols
-		expr.kind = NUMBER
+		expr.Kind = NUMBER
 		val, e := strconv.ParseFloat(token, 64)
 
-		expr.value = val
+		expr.Value = val
 
 		if e != nil {
-			expr.kind = SYMBOL
-			expr.value = token
+			expr.Kind = SYMBOL
+			expr.Value = token
 		}
 	}
 	if len(tokens) > 0 {
 		next := Expr{LIST, nil, nil, nil}
-		expr.next = &next
+		expr.Next = &next
 		buildExpressionTree(&next, tokens)
 	}
 }

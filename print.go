@@ -6,13 +6,13 @@ import (
 )
 
 func printNode(expr Expr) {
-	fmt.Printf("%s ", typeof(expr.kind))
-	fmt.Printf(" %v", expr.value)
-	if expr.next != nil {
-		fmt.Printf("next: %v", expr.next)
+	fmt.Printf("%s ", typeof(expr.Kind))
+	fmt.Printf(" %v", expr.Value)
+	if expr.Next != nil {
+		fmt.Printf("next: %v", expr.Next)
 	}
-	if expr.child != nil {
-		fmt.Printf("child: %v", expr.child)
+	if expr.Child != nil {
+		fmt.Printf("child: %v", expr.Child)
 	}
 	fmt.Println()
 }
@@ -22,9 +22,9 @@ func _printExpr(expr *Expr, depth int) {
 		return
 	}
 
-	fmt.Print(typeof(expr.kind))
+	fmt.Print(typeof(expr.Kind))
 
-	for i := 0; i < 7-len(typeof(expr.kind)); i++ {
+	for i := 0; i < 7-len(typeof(expr.Kind)); i++ {
 		fmt.Print(" ")
 	}
 	fmt.Print("| ")
@@ -33,18 +33,18 @@ func _printExpr(expr *Expr, depth int) {
 		fmt.Print("  ")
 	}
 
-	if expr.kind == LIST {
+	if expr.Kind == LIST {
 		fmt.Println("(")
 	} else {
-		fmt.Println(expr.value)
+		fmt.Println(expr.Value)
 	}
 
-	if expr.child != nil {
-		_printExpr(expr.child, depth+1)
+	if expr.Child != nil {
+		_printExpr(expr.Child, depth+1)
 	}
 
-	if expr.next != nil {
-		_printExpr(expr.next, depth)
+	if expr.Next != nil {
+		_printExpr(expr.Next, depth)
 	}
 }
 

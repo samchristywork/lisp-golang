@@ -2,9 +2,26 @@ package main
 
 import (
 	"fmt"
+	"lisp/model"
 	"os"
 	"os/exec"
 )
+
+// TODO: Fix this
+const (
+	UNKNOWN = iota
+	BOOL
+	FUNCTION
+	LAMBDA
+	LIST
+	NULL
+	NUMBER
+	PAMBDA
+	STRING
+	SYMBOL
+)
+
+type Expr = model.Expr
 
 type Env struct {
 	outer *Env
@@ -17,12 +34,12 @@ func addEnv(env *Env, key string, value Expr) {
 
 func lookup(env *Env, key string) Expr {
 	if env == nil {
-		return Expr{UNKNOWN, nil, nil, nil}
+		return Expr{Kind: UNKNOWN, Value: nil, Next: nil, Child: nil}
 	}
 
 	value := env.data[key]
 
-	if value.kind == UNKNOWN {
+	if value.Kind == UNKNOWN {
 		return lookup(env.outer, key)
 	}
 
@@ -32,17 +49,17 @@ func lookup(env *Env, key string) Expr {
 func lambda(e Expr, env *Env) Expr {
 	fmt.Println("lambda is deprecated, use pambda instead.")
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func pambda(e Expr, env *Env) Expr {
-	return Expr{PAMBDA, e, nil, nil}
+	return Expr{Kind: PAMBDA, Value: e, Next: nil, Child: nil}
 }
 
 func system(e Expr, env *Env) Expr {
 	e = eval(&e, env)
 
-	if e.kind != STRING {
+	if e.Kind != STRING {
 		panic("system requires a string")
 	}
 
@@ -50,76 +67,76 @@ func system(e Expr, env *Env) Expr {
 
 	head := e
 	for {
-		if head.kind != STRING {
+		if head.Kind != STRING {
 			panic("system requires a string")
 		}
 
-		args = append(args, head.value.(string))
+		args = append(args, head.Value.(string))
 
-		if head.next == nil {
+		if head.Next == nil {
 			break
 		}
 
-		head = *head.next
+		head = *head.Next
 	}
 
-	command := exec.Command(e.value.(string), args[1:]...)
+	command := exec.Command(e.Value.(string), args[1:]...)
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
 	command.Run()
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func initEnv() *Env {
 	env := &Env{nil, make(map[string]Expr)}
 
 	// Data and Control Flow
-	addEnv(env, "assert", Expr{FUNCTION, assert, nil, nil})
-	addEnv(env, "begin", Expr{FUNCTION, begin, nil, nil})
-	addEnv(env, "define", Expr{FUNCTION, define, nil, nil})
-	addEnv(env, "if", Expr{FUNCTION, _if, nil, nil})
-	addEnv(env, "lambda", Expr{FUNCTION, lambda, nil, nil})
-	addEnv(env, "loop", Expr{FUNCTION, loop, nil, nil})
-	addEnv(env, "pambda", Expr{FUNCTION, pambda, nil, nil})
-	addEnv(env, "set", Expr{FUNCTION, set, nil, nil})
+	addEnv(env, "assert", Expr{Kind: FUNCTION, Value: assert, Next: nil, Child: nil})
+	addEnv(env, "begin", Expr{Kind: FUNCTION, Value: begin, Next: nil, Child: nil})
+	addEnv(env, "define", Expr{Kind: FUNCTION, Value: define, Next: nil, Child: nil})
+	addEnv(env, "if", Expr{Kind: FUNCTION, Value: _if, Next: nil, Child: nil})
+	addEnv(env, "lambda", Expr{Kind: FUNCTION, Value: lambda, Next: nil, Child: nil})
+	addEnv(env, "loop", Expr{Kind: FUNCTION, Value: loop, Next: nil, Child: nil})
+	addEnv(env, "pambda", Expr{Kind: FUNCTION, Value: pambda, Next: nil, Child: nil})
+	addEnv(env, "set", Expr{Kind: FUNCTION, Value: set, Next: nil, Child: nil})
 
 	// Arithmetic
-	addEnv(env, "+", Expr{FUNCTION, plus, nil, nil})
-	addEnv(env, "-", Expr{FUNCTION, minus, nil, nil})
-	addEnv(env, "*", Expr{FUNCTION, multiply, nil, nil})
-	addEnv(env, "/", Expr{FUNCTION, divide, nil, nil})
+	addEnv(env, "+", Expr{Kind: FUNCTION, Value: plus, Next: nil, Child: nil})
+	addEnv(env, "-", Expr{Kind: FUNCTION, Value: minus, Next: nil, Child: nil})
+	addEnv(env, "*", Expr{Kind: FUNCTION, Value: multiply, Next: nil, Child: nil})
+	addEnv(env, "/", Expr{Kind: FUNCTION, Value: divide, Next: nil, Child: nil})
 
 	// Comparison
-	addEnv(env, "=", Expr{FUNCTION, equals, nil, nil})
-	addEnv(env, "!=", Expr{FUNCTION, notEquals, nil, nil})
-	addEnv(env, "<", Expr{FUNCTION, lessThan, nil, nil})
-	addEnv(env, ">", Expr{FUNCTION, greaterThan, nil, nil})
-	addEnv(env, "<=", Expr{FUNCTION, lessThanEquals, nil, nil})
-	addEnv(env, ">=", Expr{FUNCTION, greaterThanEquals, nil, nil})
+	addEnv(env, "=", Expr{Kind: FUNCTION, Value: equals, Next: nil, Child: nil})
+	addEnv(env, "!=", Expr{Kind: FUNCTION, Value: notEquals, Next: nil, Child: nil})
+	addEnv(env, "<", Expr{Kind: FUNCTION, Value: lessThan, Next: nil, Child: nil})
+	addEnv(env, ">", Expr{Kind: FUNCTION, Value: greaterThan, Next: nil, Child: nil})
+	addEnv(env, "<=", Expr{Kind: FUNCTION, Value: lessThanEquals, Next: nil, Child: nil})
+	addEnv(env, ">=", Expr{Kind: FUNCTION, Value: greaterThanEquals, Next: nil, Child: nil})
 
 	// Logic
-	addEnv(env, "and", Expr{FUNCTION, and, nil, nil})
-	addEnv(env, "or", Expr{FUNCTION, or, nil, nil})
-	addEnv(env, "not", Expr{FUNCTION, not, nil, nil})
-	addEnv(env, "xor", Expr{FUNCTION, xor, nil, nil})
-	addEnv(env, "nor", Expr{FUNCTION, nor, nil, nil})
-	addEnv(env, "nand", Expr{FUNCTION, nand, nil, nil})
-	addEnv(env, "xnor", Expr{FUNCTION, xnor, nil, nil})
+	addEnv(env, "and", Expr{Kind: FUNCTION, Value: and, Next: nil, Child: nil})
+	addEnv(env, "or", Expr{Kind: FUNCTION, Value: or, Next: nil, Child: nil})
+	addEnv(env, "not", Expr{Kind: FUNCTION, Value: not, Next: nil, Child: nil})
+	addEnv(env, "xor", Expr{Kind: FUNCTION, Value: xor, Next: nil, Child: nil})
+	addEnv(env, "nor", Expr{Kind: FUNCTION, Value: nor, Next: nil, Child: nil})
+	addEnv(env, "nand", Expr{Kind: FUNCTION, Value: nand, Next: nil, Child: nil})
+	addEnv(env, "xnor", Expr{Kind: FUNCTION, Value: xnor, Next: nil, Child: nil})
 
 	// Constants
-	addEnv(env, "true", Expr{BOOL, true, nil, nil})
-	addEnv(env, "false", Expr{BOOL, false, nil, nil})
-	addEnv(env, "null", Expr{NULL, nil, nil, nil})
+	addEnv(env, "true", Expr{Kind: BOOL, Value: true, Next: nil, Child: nil})
+	addEnv(env, "false", Expr{Kind: BOOL, Value: false, Next: nil, Child: nil})
+	addEnv(env, "null", Expr{Kind: NULL, Value: nil, Next: nil, Child: nil})
 
 	// I/O
-	addEnv(env, "print", Expr{FUNCTION, _print, nil, nil})
-	addEnv(env, "system", Expr{FUNCTION, system, nil, nil})
+	addEnv(env, "print", Expr{Kind: FUNCTION, Value: _print, Next: nil, Child: nil})
+	addEnv(env, "system", Expr{Kind: FUNCTION, Value: system, Next: nil, Child: nil})
 
 	// Debug
-	addEnv(env, "env", Expr{FUNCTION, showEnv, nil, nil})
-	addEnv(env, "inspect", Expr{FUNCTION, inspect, nil, nil})
-	addEnv(env, "lookup", Expr{FUNCTION, lookupValue, nil, nil})
+	addEnv(env, "env", Expr{Kind: FUNCTION, Value: showEnv, Next: nil, Child: nil})
+	addEnv(env, "inspect", Expr{Kind: FUNCTION, Value: inspect, Next: nil, Child: nil})
+	addEnv(env, "lookup", Expr{Kind: FUNCTION, Value: lookupValue, Next: nil, Child: nil})
 
 	return env
 }

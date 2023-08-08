@@ -37,7 +37,7 @@ func TestNestedArithmetic(t *testing.T) {
 func TestBasicComparison(t *testing.T) {
 	ret := evalNew(parse("(= 1 2)"))
 
-	if ret.kind != BOOL || ret.value != false || ret.child != nil || ret.next != nil {
+	if ret.Kind != BOOL || ret.Value != false || ret.Child != nil || ret.Next != nil {
 		t.Error("Expected false")
 	}
 
