@@ -25,28 +25,34 @@ func tokenize(input string) []string {
 	for n := 0; n < len(input); n++ {
 		character := input[n]
 
-		if character == '(' {
+		if character == '(' { // Handle Parentheses
 			tokens = append(tokens, "(")
 		} else if character == ')' {
 			tokens = append(tokens, ")")
-		} else if character == ' ' {
+
+		} else if character == ' ' || character == '\n' { // Handle Whitespace
+			continue
 
 		} else if character == '"' { // Handle Strings
 			for m := n + 1; m < len(input); m++ {
-				if input[m] == '"' {
-					tokens = append(tokens, input[n:m+1])
-					n = m
-					break
+				if input[m] != '"' {
+					continue
 				}
+
+				tokens = append(tokens, input[n:m+1])
+				n = m
+				break
 			}
 
 		} else { // Handle other Atoms
 			for m := n + 1; m < len(input); m++ {
-				if input[m] == '(' || input[m] == ')' || input[m] == ' ' {
-					tokens = append(tokens, input[n:m])
-					n = m - 1
-					break
+				if input[m] != '(' && input[m] != ')' && input[m] != ' ' && input[m] != '\n' {
+					continue
 				}
+
+				tokens = append(tokens, input[n:m])
+				n = m - 1
+				break
 			}
 		}
 	}

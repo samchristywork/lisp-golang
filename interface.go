@@ -15,6 +15,17 @@ func repl() {
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSuffix(input, "\n")
 
+		if input == "help" {
+			fmt.Println("help: print this help message")
+			fmt.Println("env: print the environment")
+			fmt.Println("exit: exit the repl")
+			continue
+		}
+
+		if len(input) != 0 {
+			input = strings.Split(input, ";")[0]
+		}
+
 		if input == "env" || input == "." {
 			printEnv(env)
 			continue
@@ -48,7 +59,11 @@ func file() {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		content += scanner.Text()
+		line := scanner.Text()
+		if len(line) != 0 {
+			line = strings.Split(line, ";")[0]
+		}
+		content += line + "\n"
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -57,8 +72,7 @@ func file() {
 	}
 
 	env := initEnv()
-	expression := parse("(begin \n" + content + ")")
+	expression := parse("(begin (print \"Program Begin\")\n" + content + ")")
 
-	value := eval(expression, env)
-	fmt.Println(value.value)
+	eval(expression, env)
 }
