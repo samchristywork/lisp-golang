@@ -15,120 +15,17 @@ func addEnv(env *Env, key string, value Expr) {
 	env.data[key] = value
 }
 
-func __print(e Expr, env *Env) {
-	fmt.Print(eval(&e, env).value)
-
-	if e.next != nil {
-		__print(*e.next, env)
-	}
-}
-
-func _print(e Expr, env *Env) Expr {
-	__print(e, env)
-	fmt.Println()
-
-	return Expr{NULL, nil, nil, nil}
-}
-
-func begin(e Expr, env *Env) Expr {
-	ret := Expr{NULL, nil, nil, nil}
-
-	for {
-		ret = eval(&e, env)
-
-		if e.next == nil {
-			break
-		}
-
-		e = *e.next
+func lookup(env *Env, key string) Expr {
+	if env == nil {
+		return Expr{UNKNOWN, nil, nil, nil}
 	}
 
-	return ret
-}
+	value := env.data[key]
 
-func loop(e Expr, env *Env) Expr {
-	ret := Expr{NULL, nil, nil, nil}
-
-	head := e
-
-	for {
-		ret = eval(&e, env)
-
-		if e.next == nil {
-			if ret.kind == BOOL {
-				if ret.value.(bool) {
-				} else {
-					break
-				}
-			} else {
-				panic("loop requires a boolean expression")
-			}
-
-			e = head
-			continue
-		}
-
-		e = *e.next
+	if value.kind == UNKNOWN {
+		return lookup(env.outer, key)
 	}
 
-	return ret
-}
-
-func set(e Expr, env *Env) Expr {
-	key := eval(&e, env)
-	value := eval(e.next, env)
-
-	if key.kind != SYMBOL {
-		panic("set requires a symbol")
-	}
-
-	addEnv(env, key.value.(string), eval(&value, env))
-
-	return Expr{NULL, nil, nil, nil}
-}
-
-func define(e Expr, env *Env) Expr {
-	key := eval(&e, env)
-	value := eval(e.next, env)
-
-	if key.kind != SYMBOL {
-		panic("define requires a symbol")
-	}
-
-	addEnv(env, key.value.(string), eval(&value, env))
-
-	return Expr{NULL, nil, nil, nil}
-}
-
-func _if(e Expr, env *Env) Expr {
-	condition := eval(&e, env)
-
-	if condition.value.(bool) { // Consequent
-		e.next.next = nil
-		return eval(e.next, env)
-
-	} else { // Alternative
-		return eval(e.next.next, env)
-	}
-}
-
-func inspect(e Expr, env *Env) Expr {
-	e = eval(&e, env)
-
-	fmt.Printf("Expr: %v\n", e)
-	fmt.Printf("Kind: %v\n", typeof(e.kind))
-	fmt.Printf("Value: %v\n", e.value)
-	fmt.Printf("Child: %v\n", e.child)
-	fmt.Printf("Next: %v\n", e.next)
-
-	printExpr(e.value.(*Expr))
-
-	return Expr{NULL, nil, nil, nil}
-}
-
-func lookupValue(e Expr, env *Env) Expr {
-	e = eval(&e, env)
-	value := lookup(env, e.value.(string))
 	return value
 }
 
@@ -140,36 +37,6 @@ func lambda(e Expr, env *Env) Expr {
 
 func pambda(e Expr, env *Env) Expr {
 	return Expr{PAMBDA, e, nil, nil}
-}
-
-func assert(e Expr, env *Env) Expr {
-	assertion := eval(&e, env)
-
-	if assertion.kind != BOOL {
-		panic("assertion must be a boolean")
-	}
-
-	if assertion.value.(bool) {
-		return Expr{NULL, nil, nil, nil}
-
-	} else {
-		fmt.Printf("Assertion failed: %v\n", e)
-		os.Exit(1)
-		return Expr{NULL, nil, nil, nil}
-	}
-}
-
-func showEnv(e Expr, env *Env) Expr {
-	if e.kind == SYMBOL {
-		key := e.value.(string)
-		value := lookup(env, key)
-		printNode(value)
-
-	} else {
-		printEnv(env)
-	}
-
-	return Expr{NULL, nil, nil, nil}
 }
 
 func system(e Expr, env *Env) Expr {
