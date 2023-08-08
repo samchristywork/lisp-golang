@@ -112,6 +112,98 @@ func _if(e Expr, env *Env) Expr {
 	}
 }
 
+func inspect(e Expr, env *Env) Expr {
+	e = eval(&e, env)
+
+	fmt.Printf("Expr: %v\n", e)
+	fmt.Printf("Kind: %v\n", typeof(e.kind))
+	fmt.Printf("Value: %v\n", e.value)
+	fmt.Printf("Child: %v\n", e.child)
+	fmt.Printf("Next: %v\n", e.next)
+
+	printExpr(e.value.(*Expr))
+
+	return Expr{NULL, nil, nil, nil}
+}
+
+func lookupValue(e Expr, env *Env) Expr {
+	e = eval(&e, env)
+	value := lookup(env, e.value.(string))
+	return value
+}
+
+func lambda(e Expr, env *Env) Expr {
+	fmt.Println("lambda is deprecated, use pambda instead.")
+
+	return Expr{NULL, nil, nil, nil}
+}
+
+func pambda(e Expr, env *Env) Expr {
+	return Expr{PAMBDA, e, nil, nil}
+}
+
+func assert(e Expr, env *Env) Expr {
+	assertion := eval(&e, env)
+
+	if assertion.kind != BOOL {
+		panic("assertion must be a boolean")
+	}
+
+	if assertion.value.(bool) {
+		return Expr{NULL, nil, nil, nil}
+
+	} else {
+		fmt.Printf("Assertion failed: %v\n", e)
+		os.Exit(1)
+		return Expr{NULL, nil, nil, nil}
+	}
+}
+
+func showEnv(e Expr, env *Env) Expr {
+	if e.kind == SYMBOL {
+		key := e.value.(string)
+		value := lookup(env, key)
+		printNode(value)
+
+	} else {
+		printEnv(env)
+	}
+
+	return Expr{NULL, nil, nil, nil}
+}
+
+func system(e Expr, env *Env) Expr {
+	e = eval(&e, env)
+
+	if e.kind != STRING {
+		panic("system requires a string")
+	}
+
+	args := []string{}
+
+	head := e
+	for {
+		if head.kind != STRING {
+			panic("system requires a string")
+		}
+
+		args = append(args, head.value.(string))
+
+		if head.next == nil {
+			break
+		}
+
+		head = *head.next
+	}
+
+	command := exec.Command(e.value.(string), args[1:]...)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+	command.Run()
+
+	return Expr{NULL, nil, nil, nil}
+}
+
 func initEnv() *Env {
 	env := &Env{nil, make(map[string]Expr)}
 
