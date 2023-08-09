@@ -4,16 +4,16 @@ import (
 	"fmt"
 )
 
-func __print(e Expr, env *Env) {
-	fmt.Print(eval(&e, env).Value)
+func __print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) {
+	fmt.Print(evaluator(&e, env).Value)
 
 	if e.Next != nil {
-		__print(*e.Next, env)
+		__print(*e.Next, env, evaluator)
 	}
 }
 
 func _print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	__print(e, env)
+	__print(e, env, evaluator)
 	fmt.Println()
 
 	return Expr{NULL, nil, nil, nil}

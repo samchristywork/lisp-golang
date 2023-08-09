@@ -1,8 +1,8 @@
 package core
 
 func equals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 
@@ -26,8 +26,8 @@ func notEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func lessThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 
@@ -39,8 +39,8 @@ func lessThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func greaterThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 

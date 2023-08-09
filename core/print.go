@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"lisp/core/env"
 	"sort"
 )
 
@@ -33,7 +34,7 @@ func _printExpr(expr *Expr, depth int) {
 		fmt.Print("  ")
 	}
 
-	if expr.Kind == LIST {
+	if expr.Kind == core.LIST {
 		fmt.Println("(")
 	} else {
 		fmt.Println(expr.Value)
@@ -53,14 +54,14 @@ func printExpr(expr *Expr) {
 	fmt.Println()
 }
 
-func _printEnv(env *Env, depth int) {
-	if env.outer != nil {
-		_printEnv(env.outer, depth+1)
+func _printEnv(env *core.Env, depth int) {
+	if env.Outer != nil {
+		_printEnv(env.Outer, depth+1)
 	}
 
-	keys := make([]string, 0, len(env.data))
+	keys := make([]string, 0, len(env.Data))
 
-	for key := range env.data {
+	for key := range env.Data {
 		keys = append(keys, key)
 	}
 
@@ -69,11 +70,11 @@ func _printEnv(env *Env, depth int) {
 	for _, key := range keys {
 		fmt.Printf("%d\t", depth)
 		fmt.Printf("%s\t", key)
-		printNode(env.data[key])
+		printNode(env.Data[key])
 	}
 }
 
-func printEnv(env *Env) {
+func printEnv(env *core.Env) {
 	fmt.Println("Scope\tLabel\tType      Value")
 	_printEnv(env, 0)
 }

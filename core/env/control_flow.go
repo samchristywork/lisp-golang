@@ -6,14 +6,14 @@ import (
 )
 
 func _if(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	condition := eval(&e, env)
+	condition := evaluator(&e, env)
 
 	if condition.Value.(bool) { // Consequent
 		e.Next.Next = nil
-		return eval(e.Next, env)
+		return evaluator(e.Next, env)
 
 	} else { // Alternative
-		return eval(e.Next.Next, env)
+		return evaluator(e.Next.Next, env)
 	}
 }
 
@@ -21,7 +21,7 @@ func begin(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	ret := Expr{NULL, nil, nil, nil}
 
 	for {
-		ret = eval(&e, env)
+		ret = evaluator(&e, env)
 
 		if e.Next == nil {
 			break
@@ -39,7 +39,7 @@ func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	head := e
 
 	for {
-		ret = eval(&e, env)
+		ret = evaluator(&e, env)
 
 		if e.Next == nil {
 			if ret.Kind == BOOL {
@@ -62,7 +62,7 @@ func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func assert(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	assertion := eval(&e, env)
+	assertion := evaluator(&e, env)
 
 	if assertion.Kind != BOOL {
 		panic("assertion must be a boolean")

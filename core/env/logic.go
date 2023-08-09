@@ -1,8 +1,8 @@
 package core
 
 func and(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("and requires two booleans")
@@ -12,8 +12,8 @@ func and(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func or(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("and requires two booleans")
@@ -23,7 +23,7 @@ func or(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func not(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
+	a := evaluator(&e, env)
 
 	if a.Kind != BOOL {
 		panic("not requires a boolean")
@@ -33,8 +33,8 @@ func not(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func xor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("xor requires two booleans")
@@ -47,8 +47,8 @@ func xor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func nor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("nor requires two booleans")
@@ -58,8 +58,8 @@ func nor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func nand(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("nand requires two booleans")
@@ -69,8 +69,8 @@ func nand(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func xnor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 
 	if a.Kind != BOOL || b.Kind != BOOL {
 		panic("xnor requires two booleans")

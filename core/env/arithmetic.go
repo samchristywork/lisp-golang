@@ -14,8 +14,8 @@ func plus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func minus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 
@@ -27,8 +27,8 @@ func minus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func multiply(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 
@@ -40,8 +40,8 @@ func multiply(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func divide(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 
