@@ -1,6 +1,6 @@
 package core
 
-func set(e Expr, env *Env) Expr {
+func set(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	key := eval(&e, env)
 	value := eval(e.Next, env)
 
@@ -13,7 +13,7 @@ func set(e Expr, env *Env) Expr {
 	return Expr{NULL, nil, nil, nil}
 }
 
-func define(e Expr, env *Env) Expr {
+func define(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	key := eval(&e, env)
 	value := eval(e.Next, env)
 

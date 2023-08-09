@@ -12,7 +12,7 @@ func __print(e Expr, env *Env) {
 	}
 }
 
-func _print(e Expr, env *Env) Expr {
+func _print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	__print(e, env)
 	fmt.Println()
 

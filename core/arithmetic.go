@@ -13,7 +13,7 @@ func plus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	return Expr{Kind: NUMBER, Value: a.Value.(float64) + b.Value.(float64), Next: nil, Child: nil}
 }
 
-func minus(e Expr, env *Env) Expr {
+func minus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil
@@ -26,7 +26,7 @@ func minus(e Expr, env *Env) Expr {
 	return Expr{Kind: NUMBER, Value: a.Value.(float64) - b.Value.(float64), Next: nil, Child: nil}
 }
 
-func multiply(e Expr, env *Env) Expr {
+func multiply(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil
@@ -39,7 +39,7 @@ func multiply(e Expr, env *Env) Expr {
 	return Expr{Kind: NUMBER, Value: a.Value.(float64) * b.Value.(float64), Next: nil, Child: nil}
 }
 
-func divide(e Expr, env *Env) Expr {
+func divide(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil

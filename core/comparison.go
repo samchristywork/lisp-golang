@@ -1,6 +1,6 @@
 package core
 
-func equals(e Expr, env *Env) Expr {
+func equals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil
@@ -17,15 +17,15 @@ func equals(e Expr, env *Env) Expr {
 	}
 }
 
-func notEquals(e Expr, env *Env) Expr {
-	if equals(e, env).Value.(bool) {
+func notEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
+	if equals(e, env, evaluator).Value.(bool) {
 		return Expr{BOOL, false, nil, nil}
 	}
 
 	return Expr{BOOL, true, nil, nil}
 }
 
-func lessThan(e Expr, env *Env) Expr {
+func lessThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil
@@ -38,7 +38,7 @@ func lessThan(e Expr, env *Env) Expr {
 	return Expr{BOOL, a.Value.(float64) < b.Value.(float64), nil, nil}
 }
 
-func greaterThan(e Expr, env *Env) Expr {
+func greaterThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := eval(&e, env)
 	b := eval(e.Next, env)
 	a.Next = nil
@@ -51,9 +51,9 @@ func greaterThan(e Expr, env *Env) Expr {
 	return Expr{BOOL, a.Value.(float64) > b.Value.(float64), nil, nil}
 }
 
-func lessThanEquals(e Expr, env *Env) Expr {
-	lt := lessThan(e, env)
-	eq := equals(e, env)
+func lessThanEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
+	lt := lessThan(e, env, evaluator)
+	eq := equals(e, env, evaluator)
 	lt.Next = nil
 	eq.Next = nil
 
@@ -64,9 +64,9 @@ func lessThanEquals(e Expr, env *Env) Expr {
 	}
 }
 
-func greaterThanEquals(e Expr, env *Env) Expr {
-	gr := greaterThan(e, env)
-	eq := equals(e, env)
+func greaterThanEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
+	gr := greaterThan(e, env, evaluator)
+	eq := equals(e, env, evaluator)
 	gr.Next = nil
 	eq.Next = nil
 

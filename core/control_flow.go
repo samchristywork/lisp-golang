@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func _if(e Expr, env *Env) Expr {
+func _if(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	condition := eval(&e, env)
 
 	if condition.Value.(bool) { // Consequent
@@ -17,7 +17,7 @@ func _if(e Expr, env *Env) Expr {
 	}
 }
 
-func begin(e Expr, env *Env) Expr {
+func begin(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	ret := Expr{NULL, nil, nil, nil}
 
 	for {
@@ -33,7 +33,7 @@ func begin(e Expr, env *Env) Expr {
 	return ret
 }
 
-func loop(e Expr, env *Env) Expr {
+func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	ret := Expr{NULL, nil, nil, nil}
 
 	head := e
@@ -61,7 +61,7 @@ func loop(e Expr, env *Env) Expr {
 	return ret
 }
 
-func assert(e Expr, env *Env) Expr {
+func assert(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	assertion := eval(&e, env)
 
 	if assertion.Kind != BOOL {

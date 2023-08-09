@@ -46,17 +46,17 @@ func lookup(env *Env, key string) Expr {
 	return value
 }
 
-func lambda(e Expr, env *Env) Expr {
+func lambda(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	fmt.Println("lambda is deprecated, use pambda instead.")
 
 	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
-func pambda(e Expr, env *Env) Expr {
+func pambda(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	return Expr{Kind: PAMBDA, Value: e, Next: nil, Child: nil}
 }
 
-func system(e Expr, env *Env) Expr {
+func system(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	e = eval(&e, env)
 
 	if e.Kind != STRING {

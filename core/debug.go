@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func showEnv(e Expr, env *Env) Expr {
+func showEnv(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	if e.Kind == SYMBOL {
 		key := e.Value.(string)
 		value := lookup(env, key)
@@ -17,7 +17,7 @@ func showEnv(e Expr, env *Env) Expr {
 	return Expr{NULL, nil, nil, nil}
 }
 
-func inspect(e Expr, env *Env) Expr {
+func inspect(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	e = eval(&e, env)
 
 	fmt.Printf("Expr: %v\n", e)
@@ -31,7 +31,7 @@ func inspect(e Expr, env *Env) Expr {
 	return Expr{NULL, nil, nil, nil}
 }
 
-func lookupValue(e Expr, env *Env) Expr {
+func lookupValue(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	e = eval(&e, env)
 	value := lookup(env, e.Value.(string))
 	return value
