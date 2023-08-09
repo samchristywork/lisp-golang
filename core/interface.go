@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func repl() {
+func Repl() {
 	env := initEnv()
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -45,7 +45,7 @@ func repl() {
 	}
 }
 
-func file() {
+func File() {
 	filename := os.Args[1]
 	file, err := os.Open(filename)
 	if err != nil {

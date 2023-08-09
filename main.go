@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"lisp/core"
 	"os"
 )
 
@@ -9,10 +10,10 @@ func main() {
 	fmt.Println("Golang Lisp Interpreter")
 
 	if len(os.Args) > 1 {
-		file()
+		core.File()
 
 		return
 	}
 
-	repl()
+	core.Repl()
 }

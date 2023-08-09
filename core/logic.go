@@ -1,4 +1,4 @@
-package main
+package core
 
 func and(e Expr, env *Env) Expr {
 	a := eval(&e, env)

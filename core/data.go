@@ -1,4 +1,4 @@
-package main
+package core
 
 func set(e Expr, env *Env) Expr {
 	key := eval(&e, env)
