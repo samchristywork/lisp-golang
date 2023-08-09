@@ -1,8 +1,8 @@
 package core
 
-func plus(e Expr, env *Env) Expr {
-	a := eval(&e, env)
-	b := eval(e.Next, env)
+func plus(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
+	a := evaluator(&e, env)
+	b := evaluator(e.Next, env)
 	a.Next = nil
 	b.Next = nil
 

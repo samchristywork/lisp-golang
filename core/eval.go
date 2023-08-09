@@ -55,13 +55,13 @@ func evalList(expr *Expr, env *Env) Expr {
 		value := env.data[key]
 
 		if value.Kind == FUNCTION {
-			f := value.Value.(func(Expr, *Env) Expr)
+			f := value.Value.(func(Expr, *Env, func(*Expr, *Env) Expr) Expr)
 
 			if listChild.Next == nil {
-				return f(Expr{NULL, nil, nil, nil}, env)
+				return f(Expr{NULL, nil, nil, nil}, env, eval)
 			}
 
-			return f(*listChild.Next, env)
+			return f(*listChild.Next, env, eval)
 		} else if value.Kind == PAMBDA {
 			substitution := lookup(env, key).Value.(*Expr).Next.Next
 
