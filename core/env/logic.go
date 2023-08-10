@@ -8,7 +8,7 @@ func and(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("and requires two booleans")
 	}
 
-	return Expr{BOOL, a.Value.(bool) && b.Value.(bool), nil, nil}
+	return Expr{Kind: BOOL, Value: a.Value.(bool) && b.Value.(bool), Next: nil, Child: nil}
 }
 
 func or(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -19,7 +19,7 @@ func or(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("and requires two booleans")
 	}
 
-	return Expr{BOOL, a.Value.(bool) || b.Value.(bool), nil, nil}
+	return Expr{Kind: BOOL, Value: a.Value.(bool) || b.Value.(bool), Next: nil, Child: nil}
 }
 
 func not(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -29,7 +29,7 @@ func not(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("not requires a boolean")
 	}
 
-	return Expr{BOOL, !a.Value.(bool), nil, nil}
+	return Expr{Kind: BOOL, Value: !a.Value.(bool), Next: nil, Child: nil}
 }
 
 func xor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -43,7 +43,7 @@ func xor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	left := a.Value.(bool) && !b.Value.(bool)
 	right := !a.Value.(bool) && b.Value.(bool)
 
-	return Expr{BOOL, left || right, nil, nil}
+	return Expr{Kind: BOOL, Value: left || right, Next: nil, Child: nil}
 }
 
 func nor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -54,7 +54,7 @@ func nor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("nor requires two booleans")
 	}
 
-	return Expr{BOOL, !(a.Value.(bool) || b.Value.(bool)), nil, nil}
+	return Expr{Kind: BOOL, Value: !(a.Value.(bool) || b.Value.(bool)), Next: nil, Child: nil}
 }
 
 func nand(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -65,7 +65,7 @@ func nand(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("nand requires two booleans")
 	}
 
-	return Expr{BOOL, !(a.Value.(bool) && b.Value.(bool)), nil, nil}
+	return Expr{Kind: BOOL, Value: !(a.Value.(bool) && b.Value.(bool)), Next: nil, Child: nil}
 }
 
 func xnor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -79,5 +79,5 @@ func xnor(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	left := a.Value.(bool) && !b.Value.(bool)
 	right := !a.Value.(bool) && b.Value.(bool)
 
-	return Expr{BOOL, !(left || right), nil, nil}
+	return Expr{Kind: BOOL, Value: !(left || right), Next: nil, Child: nil}
 }

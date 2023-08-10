@@ -16,5 +16,5 @@ func _print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	__print(e, env, evaluator)
 	fmt.Println()
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }

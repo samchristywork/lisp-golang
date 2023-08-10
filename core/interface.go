@@ -3,13 +3,13 @@ package core
 import (
 	"bufio"
 	"fmt"
-	"lisp/core/env"
+	environment "lisp/core/env"
 	"os"
 	"strings"
 )
 
 func Repl() {
-	env := core.InitEnv()
+	env := environment.InitEnv()
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print(">> ")
@@ -72,7 +72,7 @@ func File() {
 		return
 	}
 
-	env := core.InitEnv()
+	env := environment.InitEnv()
 	expression := parse("(begin (print \"Program Begin\")\n" + content + ")")
 
 	eval(expression, env)

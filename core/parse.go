@@ -1,7 +1,7 @@
 package core
 
 import (
-	"lisp/core/env"
+	environment "lisp/core/env"
 	"strconv"
 )
 
@@ -65,13 +65,13 @@ func handleList(expr *Expr, tokens []string) {
 	right_paren_index := findRightParen(tokens)
 
 	if right_paren_index != 0 {
-		child := core.Expr{core.LIST, nil, nil, nil}
+		child := environment.Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 		expr.Child = &child
 		buildExpressionTree(&child, tokens[:right_paren_index])
 	}
 
 	if len(tokens) > right_paren_index+1 {
-		next := Expr{core.LIST, nil, nil, nil}
+		next := Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 		expr.Next = &next
 		buildExpressionTree(&next, tokens[right_paren_index+1:])
 	}
@@ -79,22 +79,22 @@ func handleList(expr *Expr, tokens []string) {
 
 func handleAtom(expr *Expr, token string, tokens []string) {
 	if len(token) > 0 && token[0] == '"' { // Handle Strings
-		expr.Kind = core.STRING
+		expr.Kind = environment.STRING
 		expr.Value = token[1 : len(token)-1]
 
 	} else { // Handle Numbers and Symbols
-		expr.Kind = core.NUMBER
+		expr.Kind = environment.NUMBER
 		val, e := strconv.ParseFloat(token, 64)
 
 		expr.Value = val
 
 		if e != nil {
-			expr.Kind = core.SYMBOL
+			expr.Kind = environment.SYMBOL
 			expr.Value = token
 		}
 	}
 	if len(tokens) > 0 {
-		next := Expr{core.LIST, nil, nil, nil}
+		next := Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 		expr.Next = &next
 		buildExpressionTree(&next, tokens)
 	}
@@ -115,7 +115,7 @@ func buildExpressionTree(expr *Expr, tokens []string) {
 }
 
 func parse(input string) *Expr {
-	exp := core.Expr{core.LIST, nil, nil, nil}
+	exp := environment.Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 	tokens := tokenize(input)
 	buildExpressionTree(&exp, tokens)
 	return &exp

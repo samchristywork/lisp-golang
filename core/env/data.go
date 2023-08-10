@@ -10,7 +10,7 @@ func set(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 
 	AddEnv(env, key.Value.(string), evaluator(&value, env))
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func define(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -23,5 +23,5 @@ func define(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 
 	AddEnv(env, key.Value.(string), evaluator(&value, env))
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }

@@ -2,35 +2,35 @@ package core
 
 import (
 	"fmt"
-	"lisp/core/env"
+	environment "lisp/core/env"
 	"lisp/model"
 )
 
 type Expr = model.Expr
 
-func evalList(expr *Expr, env *core.Env) Expr {
+func evalList(expr *Expr, env *environment.Env) Expr {
 	listChild := expr.Child
 
 	if listChild == nil {
 		return *expr
 	}
 
-	if listChild.Kind == core.LIST {
+	if listChild.Kind == environment.LIST {
 		return evalList(listChild, env)
-	} else if listChild.Kind == core.SYMBOL && listChild.Value == "set" {
+	} else if listChild.Kind == environment.SYMBOL && listChild.Value == "set" {
 		key := listChild.Next.Value.(string)
 		value := eval(listChild.Next.Next, env)
 
-		core.AddEnv(env, key, value)
+		environment.AddEnv(env, key, value)
 
-		return Expr{core.NULL, nil, nil, nil}
-	} else if listChild.Kind == core.SYMBOL && listChild.Value == "define" {
+		return Expr{Kind: environment.NULL, Value: nil, Next: nil, Child: nil}
+	} else if listChild.Kind == environment.SYMBOL && listChild.Value == "define" {
 		key := listChild.Next.Value.(string)
 
-		core.AddEnv(env, key, Expr{core.PAMBDA, listChild, nil, nil})
+		environment.AddEnv(env, key, Expr{Kind: environment.PAMBDA, Value: listChild, Next: nil, Child: nil})
 
-		return Expr{core.NULL, nil, nil, nil}
-	} else if listChild.Kind == core.SYMBOL && listChild.Value == "pambda" {
+		return Expr{Kind: environment.NULL, Value: nil, Next: nil, Child: nil}
+	} else if listChild.Kind == environment.SYMBOL && listChild.Value == "pambda" {
 		body := listChild.Next.Next
 
 		params := listChild.Next.Child
@@ -43,7 +43,7 @@ func evalList(expr *Expr, env *core.Env) Expr {
 
 			param1 := params.Value
 			next1 := eval(next, env)
-			core.AddEnv(env, param1.(string), next1)
+			environment.AddEnv(env, param1.(string), next1)
 
 			params = params.Next
 			next = next.Next
@@ -52,28 +52,28 @@ func evalList(expr *Expr, env *core.Env) Expr {
 		result := eval(body, env)
 
 		return eval(&result, env)
-	} else if listChild.Kind == core.SYMBOL {
+	} else if listChild.Kind == environment.SYMBOL {
 
 		// apply function
 		key := listChild.Value.(string)
 		value := env.Data[key]
 
-		if value.Kind == core.FUNCTION {
-			f := value.Value.(func(Expr, *core.Env, func(*Expr, *core.Env) Expr) Expr)
+		if value.Kind == environment.FUNCTION {
+			f := value.Value.(func(Expr, *environment.Env, func(*Expr, *environment.Env) Expr) Expr)
 
 			if listChild.Next == nil {
-				return f(core.Expr{core.NULL, nil, nil, nil}, env, eval)
+				return f(environment.Expr{Kind: environment.NULL, Value: nil, Next: nil, Child: nil}, env, eval)
 			}
 
 			return f(*listChild.Next, env, eval)
-		} else if value.Kind == core.PAMBDA {
-			substitution := core.Lookup(env, key).Value.(*Expr).Next.Next
+		} else if value.Kind == environment.PAMBDA {
+			substitution := environment.Lookup(env, key).Value.(*Expr).Next.Next
 
 			expr.Child = substitution
 			expr.Child.Next = listChild.Next
 
 			return eval(expr, env)
-		} else if value.Kind == core.NULL {
+		} else if value.Kind == environment.NULL {
 			// Empty
 		} else {
 			fmt.Println(typeof(value.Kind))
@@ -84,25 +84,25 @@ func evalList(expr *Expr, env *core.Env) Expr {
 	return *expr
 }
 
-func evalAtom(expr *Expr, env *core.Env) Expr {
-	if expr.Kind == core.SYMBOL {
-		value := core.Lookup(env, expr.Value.(string))
+func evalAtom(expr *Expr, env *environment.Env) Expr {
+	if expr.Kind == environment.SYMBOL {
+		value := environment.Lookup(env, expr.Value.(string))
 
-		if value.Kind == core.UNKNOWN {
+		if value.Kind == environment.UNKNOWN {
 			fmt.Println(expr.Value.(string))
 			panic("eval: unknown symbol")
 		}
 
 		return value
-	} else if expr.Kind == core.NUMBER {
+	} else if expr.Kind == environment.NUMBER {
 		return *expr
-	} else if expr.Kind == core.STRING {
+	} else if expr.Kind == environment.STRING {
 		return *expr
-	} else if expr.Kind == core.PAMBDA {
+	} else if expr.Kind == environment.PAMBDA {
 		return *expr
-	} else if expr.Kind == core.BOOL {
+	} else if expr.Kind == environment.BOOL {
 		return *expr
-	} else if expr.Kind == core.NULL {
+	} else if expr.Kind == environment.NULL {
 		return *expr
 	}
 
@@ -110,10 +110,10 @@ func evalAtom(expr *Expr, env *core.Env) Expr {
 	panic("eval: unknown kind")
 }
 
-func eval(expr *Expr, env *core.Env) Expr {
-	result := Expr{core.UNKNOWN, nil, nil, nil}
+func eval(expr *Expr, env *environment.Env) Expr {
+	result := Expr{Kind: environment.UNKNOWN, Value: nil, Next: nil, Child: nil}
 
-	if expr.Kind == core.LIST {
+	if expr.Kind == environment.LIST {
 		result = evalList(expr, env)
 	} else {
 		result = evalAtom(expr, env)
@@ -123,7 +123,7 @@ func eval(expr *Expr, env *core.Env) Expr {
 }
 
 func evalNew(expr *Expr) Expr {
-	env := core.InitEnv()
+	env := environment.InitEnv()
 
 	return eval(expr, env)
 }

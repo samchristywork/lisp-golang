@@ -18,7 +18,7 @@ func _if(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func begin(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	ret := Expr{NULL, nil, nil, nil}
+	ret := Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
 	for {
 		ret = evaluator(&e, env)
@@ -34,7 +34,7 @@ func begin(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 }
 
 func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	ret := Expr{NULL, nil, nil, nil}
+	ret := Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
 	head := e
 
@@ -69,11 +69,11 @@ func assert(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	}
 
 	if assertion.Value.(bool) {
-		return Expr{NULL, nil, nil, nil}
+		return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
 	} else {
 		fmt.Printf("Assertion failed: %v\n", e)
 		os.Exit(1)
-		return Expr{NULL, nil, nil, nil}
+		return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 	}
 }

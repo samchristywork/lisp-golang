@@ -15,7 +15,7 @@ func showEnv(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	//	printEnv(env)
 	//}
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func inspect(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -30,7 +30,7 @@ func inspect(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 
 	//printExpr(e.Value.(*Expr))
 
-	return Expr{NULL, nil, nil, nil}
+	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func lookupValue(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {

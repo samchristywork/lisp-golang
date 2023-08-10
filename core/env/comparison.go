@@ -7,22 +7,22 @@ func equals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	b.Next = nil
 
 	if a.Kind != b.Kind {
-		return Expr{BOOL, false, nil, nil}
+		return Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
 	}
 
 	if a.Value == b.Value {
-		return Expr{BOOL, true, nil, nil}
+		return Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
 	} else {
-		return Expr{BOOL, false, nil, nil}
+		return Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
 	}
 }
 
 func notEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	if equals(e, env, evaluator).Value.(bool) {
-		return Expr{BOOL, false, nil, nil}
+		return Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
 	}
 
-	return Expr{BOOL, true, nil, nil}
+	return Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
 }
 
 func lessThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -35,7 +35,7 @@ func lessThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("lessThan requires two numbers")
 	}
 
-	return Expr{BOOL, a.Value.(float64) < b.Value.(float64), nil, nil}
+	return Expr{Kind: BOOL, Value: a.Value.(float64) < b.Value.(float64), Next: nil, Child: nil}
 }
 
 func greaterThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -48,7 +48,7 @@ func greaterThan(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 		panic("greaterThan requires two numbers")
 	}
 
-	return Expr{BOOL, a.Value.(float64) > b.Value.(float64), nil, nil}
+	return Expr{Kind: BOOL, Value: a.Value.(float64) > b.Value.(float64), Next: nil, Child: nil}
 }
 
 func lessThanEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
@@ -58,9 +58,9 @@ func lessThanEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	eq.Next = nil
 
 	if lt.Value.(bool) || eq.Value.(bool) {
-		return Expr{BOOL, true, nil, nil}
+		return Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
 	} else {
-		return Expr{BOOL, false, nil, nil}
+		return Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
 	}
 }
 
@@ -71,8 +71,8 @@ func greaterThanEquals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr 
 	eq.Next = nil
 
 	if gr.Value.(bool) || eq.Value.(bool) {
-		return Expr{BOOL, true, nil, nil}
+		return Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
 	} else {
-		return Expr{BOOL, false, nil, nil}
+		return Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
 	}
 }
