@@ -19,6 +19,7 @@ const (
 	PAMBDA
 	STRING
 	SYMBOL
+	SHARK
 )
 
 type Expr = model.Expr

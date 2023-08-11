@@ -11,6 +11,7 @@ const (
 	PAMBDA
 	STRING
 	SYMBOL
+	SHARK
 )
 
 var Types = map[int]string{
@@ -24,6 +25,7 @@ var Types = map[int]string{
 	PAMBDA:   "Pambda  ",
 	STRING:   "String  ",
 	SYMBOL:   "Symbol  ",
+	SHARK:    "Shark   ",
 }
 
 type Expr struct {
@@ -64,4 +66,12 @@ func (e *Expr) Equal(other *Expr) bool {
 	}
 
 	return false
+}
+
+func NumberExpr(value float64) *Expr {
+	return &Expr{Kind: NUMBER, Value: value, Next: nil, Child: nil}
+}
+
+func NullExpr() *Expr {
+	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }

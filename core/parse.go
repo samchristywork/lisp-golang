@@ -114,7 +114,7 @@ func buildExpressionTree(expr *Expr, tokens []string) {
 	}
 }
 
-func parse(input string) *Expr {
+func Parse(input string) *Expr {
 	exp := environment.Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 	tokens := tokenize(input)
 	buildExpressionTree(&exp, tokens)

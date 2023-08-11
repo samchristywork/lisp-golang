@@ -1,16 +1,15 @@
-package core
+package env
 
 import (
 	"fmt"
-	"lisp/core/env"
 	"sort"
 )
 
-func printNode(expr Expr) {
+func PrintNode(expr *Expr) {
 	fmt.Printf("%s ", typeof(expr.Kind))
-	fmt.Printf(" %v", expr.Value)
+	fmt.Printf(" %v ", expr.Value)
 	if expr.Next != nil {
-		fmt.Printf("next: %v", expr.Next)
+		fmt.Printf("next: %v ", expr.Next)
 	}
 	if expr.Child != nil {
 		fmt.Printf("child: %v", expr.Child)
@@ -34,7 +33,7 @@ func _printExpr(expr *Expr, depth int) {
 		fmt.Print("  ")
 	}
 
-	if expr.Kind == core.LIST {
+	if expr.Kind == LIST {
 		fmt.Println("(")
 	} else {
 		fmt.Println(expr.Value)
@@ -49,12 +48,16 @@ func _printExpr(expr *Expr, depth int) {
 	}
 }
 
-func printExpr(expr *Expr) {
-	_printExpr(expr, 0)
+func PrintExpr(expr *Expr) {
+	PrintNode(expr)
+
+	if expr.Child != nil {
+		_printExpr(expr.Child, 1)
+	}
 	fmt.Println()
 }
 
-func _printEnv(env *core.Env, depth int) {
+func _printEnv(env *Env, depth int) {
 	if env.Outer != nil {
 		_printEnv(env.Outer, depth+1)
 	}
@@ -70,11 +73,11 @@ func _printEnv(env *core.Env, depth int) {
 	for _, key := range keys {
 		fmt.Printf("%d\t", depth)
 		fmt.Printf("%s\t", key)
-		printNode(env.Data[key])
+		PrintNode(env.Data[key])
 	}
 }
 
-func printEnv(env *core.Env) {
+func PrintEnv(env *Env) {
 	fmt.Println("Scope\tLabel\tType      Value")
 	_printEnv(env, 0)
 }

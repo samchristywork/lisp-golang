@@ -28,7 +28,8 @@ func Repl() {
 		}
 
 		if input == "env" || input == "." {
-			printEnv(env)
+			fmt.Println("TODO: Implement env")
+			//printEnv(env)
 			continue
 		}
 
@@ -40,7 +41,7 @@ func Repl() {
 			break
 		}
 
-		expression := parse(input)
+		expression := Parse(input)
 		value := eval(expression, env)
 		fmt.Println(value.Value)
 	}
@@ -73,7 +74,7 @@ func File() {
 	}
 
 	env := environment.InitEnv()
-	expression := parse("(begin (print \"Program Begin\")\n" + content + ")")
+	expression := Parse("(begin (print \"Program Begin\")\n" + content + ")")
 
 	eval(expression, env)
 }
