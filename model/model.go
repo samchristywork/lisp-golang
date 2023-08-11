@@ -75,3 +75,7 @@ func NumberExpr(value float64) *Expr {
 func NullExpr() *Expr {
 	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
+
+func BoolExpr(value bool) *Expr {
+	return &Expr{Kind: NULL, Value: value, Next: nil, Child: nil}
+}

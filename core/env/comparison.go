@@ -1,77 +1,78 @@
 package env
 
-func equals(operands []*Expr, env *Env, evaluator Callback) *Expr {
+import (
+	"lisp/model"
+)
+
+func expectTwoOperands(operands []*Expr, env *Env, evaluator Callback) (*Expr, *Expr) {
 	if len(operands) != 2 {
-		panic("equals requires two operands")
+		panic("requires two operands")
 	}
 
 	a := evaluator(operands[0], env)
 	b := evaluator(operands[1], env)
 
+	return a, b
+}
+
+func equals(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoOperands(operands, env, evaluator)
+
 	if a.Kind != b.Kind {
-		return &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
+		return model.BoolExpr(false)
 	}
 
 	if a.Value == b.Value {
-		return &Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
+		return model.BoolExpr(true)
 	} else {
-		return &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
+		return model.BoolExpr(false)
 	}
 }
 
 func notEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	if equals(operands, env, evaluator).Value.(bool) {
-		return &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
+		return model.BoolExpr(false)
 	}
 
-	return &Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
+	return model.BoolExpr(true)
 }
 
-func lessThan(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-	a.Next = nil
-	b.Next = nil
+func lessThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoOperands(operands, env, evaluator)
 
 	if a.Kind != NUMBER || b.Kind != NUMBER {
 		panic("lessThan requires two numbers")
 	}
 
-	return &Expr{Kind: BOOL, Value: a.Value.(float64) < b.Value.(float64), Next: nil, Child: nil}
+	return model.BoolExpr(a.Value.(float64) < b.Value.(float64))
 }
 
-func greaterThan(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-	a.Next = nil
-	b.Next = nil
+func greaterThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoOperands(operands, env, evaluator)
 
 	if a.Kind != NUMBER || b.Kind != NUMBER {
 		panic("greaterThan requires two numbers")
 	}
 
-	return &Expr{Kind: BOOL, Value: a.Value.(float64) > b.Value.(float64), Next: nil, Child: nil}
+	return model.BoolExpr(a.Value.(float64) > b.Value.(float64))
 }
 
-//func lessThanEquals(e *Expr, env *Env, evaluator Callback) *Expr {
-//	a := evaluator(e, env)
-//
-//	if lt.Value.(bool) || eq.Value.(bool) {
-//		return &Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
-//	} else {
-//		return &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
-//	}
-//}
-//
-//func greaterThanEquals(e *Expr, env *Env, evaluator Callback) *Expr {
-//	gr := greaterThan(e, env, evaluator)
-//	eq := equals(e, env, evaluator)
-//	gr.Next = nil
-//	eq.Next = nil
-//
-//	if gr.Value.(bool) || eq.Value.(bool) {
-//		return &Expr{Kind: BOOL, Value: true, Next: nil, Child: nil}
-//	} else {
-//		return &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil}
-//	}
-//}
+func lessThanEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoOperands(operands, env, evaluator)
+
+	if a.Kind != NUMBER || b.Kind != NUMBER {
+		panic("lessThanEquals requires two numbers")
+	}
+
+	return model.BoolExpr(a.Value.(float64) <= b.Value.(float64))
+}
+
+func greaterThanEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoOperands(operands, env, evaluator)
+
+	if a.Kind != NUMBER || b.Kind != NUMBER {
+		panic("greaterThanEquals requires two numbers")
+	}
+
+	return model.BoolExpr(a.Value.(float64) >= b.Value.(float64))
+}
