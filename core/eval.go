@@ -1,7 +1,7 @@
 package core
 
 import (
-	environment "lisp/core/env"
+	environment "lisp/env"
 	"lisp/model"
 )
 

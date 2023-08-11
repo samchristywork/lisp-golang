@@ -3,7 +3,7 @@ package core
 import (
 	"bufio"
 	"fmt"
-	environment "lisp/core/env"
+	environment "lisp/env"
 	"os"
 	"strings"
 )

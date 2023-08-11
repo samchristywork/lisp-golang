@@ -1,7 +1,7 @@
 package core
 
 import (
-	environment "lisp/core/env"
+	"lisp/model"
 	"strconv"
 )
 

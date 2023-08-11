@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	core "lisp/core"
-	environment "lisp/core/env"
+	environment "lisp/env"
 	model "lisp/model"
 	util "lisp/util"
 	"testing"
