@@ -32,49 +32,27 @@ func Lookup(env *Env, key string) *Expr {
 		os.Exit(1)
 	}
 
-	if value.Kind == UNKNOWN {
-		fmt.Println("Unknown symbol: " + key)
-		os.Exit(1)
-	}
-
 	return value
 }
 
-func lambda(e *Expr, env *Env, evaluator Callback) *Expr {
-	fmt.Println("lambda is deprecated, use pambda instead.")
-
-	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
-}
-
-func pambda(e *Expr, env *Env, evaluator Callback) *Expr {
-	return &Expr{Kind: PAMBDA, Value: e, Next: nil, Child: nil}
-}
-
-func system(e *Expr, env *Env, evaluator Callback) *Expr {
-	e = evaluator(e, env)
-
-	if e.Kind != STRING {
-		panic("system requires a string")
-	}
-
+func system(operators []*Expr, env *Env, evaluator Callback) *Expr {
 	args := []string{}
 
-	head := e
-	for {
-		if head.Kind != STRING {
+	if len(operators) < 1 {
+		panic("system requires at least one argument")
+	}
+
+	for _, arg := range operators {
+		e := evaluator(arg, env)
+
+		if e.Kind != model.STRING {
 			panic("system requires a string")
 		}
 
-		args = append(args, head.Value.(string))
-
-		if head.Next == nil {
-			break
-		}
-
-		head = head.Next
+		args = append(args, e.Value.(string))
 	}
 
-	command := exec.Command(e.Value.(string), args[1:]...)
+	command := exec.Command(args[0], args[1:]...)
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
 	command.Run()
