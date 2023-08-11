@@ -1,55 +1,44 @@
 package env
 
-func plus(operands []*Expr, env *Env, evaluator Callback) *Expr {
+import (
+	"lisp/model"
+)
+
+func expectTwoNumbers(operands []*Expr, env *Env, evaluator Callback) (*Expr, *Expr) {
 	if len(operands) != 2 {
-		panic("plus requires two operands")
+		panic("requires two operands")
 	}
 
 	a := evaluator(operands[0], env)
 	b := evaluator(operands[1], env)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
-		panic("plus requires two numbers")
+	if operands[0].Kind != NUMBER || operands[1].Kind != NUMBER {
+		panic("requires two numbers")
 	}
 
-	return &Expr{Kind: NUMBER, Value: a.Value.(float64) + b.Value.(float64), Next: nil, Child: nil}
+	return a, b
 }
 
-func minus(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-	a.Next = nil
-	b.Next = nil
+func plus(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoNumbers(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
-		panic("minus requires two numbers")
-	}
-
-	return &Expr{Kind: NUMBER, Value: a.Value.(float64) - b.Value.(float64), Next: nil, Child: nil}
+	return model.NumberExpr(a.Value.(float64) + b.Value.(float64))
 }
 
-func multiply(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-	a.Next = nil
-	b.Next = nil
+func minus(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoNumbers(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
-		panic("multiply requires two numbers")
-	}
-
-	return &Expr{Kind: NUMBER, Value: a.Value.(float64) * b.Value.(float64), Next: nil, Child: nil}
+	return model.NumberExpr(a.Value.(float64) - b.Value.(float64))
 }
 
-func divide(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-	a.Next = nil
-	b.Next = nil
+func multiply(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoNumbers(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
-		panic("divide requires two numbers")
-	}
+	return model.NumberExpr(a.Value.(float64) * b.Value.(float64))
+}
 
-	return &Expr{Kind: NUMBER, Value: a.Value.(float64) / b.Value.(float64), Next: nil, Child: nil}
+func divide(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoNumbers(operands, env, evaluator)
+
+	return model.NumberExpr(a.Value.(float64) / b.Value.(float64))
 }

@@ -109,11 +109,11 @@ func InitEnv() *Env {
 	//AddEnv(env, "pambda", &Expr{Kind: FUNCTION, Value: pambda, Next: nil, Child: nil})
 	//AddEnv(env, "set", &Expr{Kind: FUNCTION, Value: set, Next: nil, Child: nil})
 
-	//// Arithmetic
+	// Arithmetic
 	AddEnv(env, "+", &Expr{Kind: FUNCTION, Value: plus, Next: nil, Child: nil})
-	//AddEnv(env, "-", &Expr{Kind: FUNCTION, Value: minus, Next: nil, Child: nil})
-	//AddEnv(env, "*", &Expr{Kind: FUNCTION, Value: multiply, Next: nil, Child: nil})
-	//AddEnv(env, "/", &Expr{Kind: FUNCTION, Value: divide, Next: nil, Child: nil})
+	AddEnv(env, "-", &Expr{Kind: FUNCTION, Value: minus, Next: nil, Child: nil})
+	AddEnv(env, "*", &Expr{Kind: FUNCTION, Value: multiply, Next: nil, Child: nil})
+	AddEnv(env, "/", &Expr{Kind: FUNCTION, Value: divide, Next: nil, Child: nil})
 
 	//// Comparison
 	AddEnv(env, "=", &Expr{Kind: FUNCTION, Value: equals, Next: nil, Child: nil})
