@@ -2,10 +2,71 @@ package env
 
 import (
 	"fmt"
+	"lisp/model"
+	"lisp/util"
 	"sort"
 )
 
+// Similar to PrintExpr, but does not recurse
 func PrintNode(expr *Expr) {
+	// TODO: Implement
+}
+
+func _printExpr(expr *Expr) {
+	if expr == nil {
+		return
+	}
+
+	if expr.Kind == model.NUMBER {
+		util.Blue()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+	} else if expr.Kind == model.STRING {
+		fmt.Printf("\"")
+		util.Green()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+		fmt.Printf("\"")
+	} else if expr.Kind == model.BOOL {
+		util.Magenta()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+	} else if expr.Kind == model.SYMBOL {
+		util.Cyan()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+	} else if expr.Kind == model.NULL {
+		util.Red()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+	} else if expr.Kind == model.LIST {
+		fmt.Printf("(")
+		_printExpr(expr.Child)
+		fmt.Printf(")")
+	} else if expr.Kind == model.FUNCTION {
+		util.Yellow()
+		fmt.Printf("%v", expr.Child)
+		util.Reset()
+	} else if expr.Kind == model.LAMBDA {
+		util.Blue()
+		fmt.Printf("%v", expr.Value)
+		util.Reset()
+	}
+
+	if expr.Next != nil {
+		fmt.Printf(" ")
+		_printExpr(expr.Next)
+	}
+}
+
+func PrintExpr(expr *Expr) {
+	if expr != nil {
+		_printExpr(expr)
+	}
+	fmt.Println()
+}
+
+func PrintEnvLine(expr *Expr) {
 	fmt.Printf("%s ", typeof(expr.Kind))
 	fmt.Printf(" %v ", expr.Value)
 	if expr.Next != nil {
@@ -13,46 +74,6 @@ func PrintNode(expr *Expr) {
 	}
 	if expr.Child != nil {
 		fmt.Printf("child: %v", expr.Child)
-	}
-	fmt.Println()
-}
-
-func _printExpr(expr *Expr, depth int) {
-	if expr == nil {
-		return
-	}
-
-	fmt.Print(typeof(expr.Kind))
-
-	for i := 0; i < 7-len(typeof(expr.Kind)); i++ {
-		fmt.Print(" ")
-	}
-	fmt.Print("| ")
-
-	for i := 0; i < depth; i++ {
-		fmt.Print("  ")
-	}
-
-	if expr.Kind == LIST {
-		fmt.Println("(")
-	} else {
-		fmt.Println(expr.Value)
-	}
-
-	if expr.Child != nil {
-		_printExpr(expr.Child, depth+1)
-	}
-
-	if expr.Next != nil {
-		_printExpr(expr.Next, depth)
-	}
-}
-
-func PrintExpr(expr *Expr) {
-	PrintNode(expr)
-
-	if expr.Child != nil {
-		_printExpr(expr.Child, 1)
 	}
 	fmt.Println()
 }
@@ -73,7 +94,7 @@ func _printEnv(env *Env, depth int) {
 	for _, key := range keys {
 		fmt.Printf("%d\t", depth)
 		fmt.Printf("%s\t", key)
-		PrintNode(env.Data[key])
+		PrintEnvLine(env.Data[key])
 	}
 }
 
