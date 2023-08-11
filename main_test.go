@@ -5,6 +5,7 @@ import (
 	core "lisp/core"
 	environment "lisp/core/env"
 	model "lisp/model"
+	util "lisp/util"
 	"testing"
 )
 
@@ -14,11 +15,15 @@ func testExpression(t *testing.T, expression string, expected *model.Expr) {
 	ret := core.EvalNew(core.Parse(expression))
 
 	if !ret.Equal(expected) {
+		util.Red()
 		fmt.Println("Test failed")
 		environment.PrintExpr(ret)
+		util.Reset()
 		t.Error()
 	} else {
+		util.Green()
 		fmt.Println("Test passed")
+		util.Reset()
 	}
 }
 
@@ -76,4 +81,84 @@ func Test11(t *testing.T) {
 	input := "(begin (define (add-three-numbers x y z) (+ x (+ y z)))"
 	input += "(add-three-numbers 1 2 3))"
 	testExpression(t, input, model.NumberExpr(6.0))
+}
+
+func TestBasicArithmetic(t *testing.T) {
+	input := "(+ 1 2)"
+	testExpression(t, input, model.NumberExpr(3.0))
+
+	input = "(- 1 2)"
+	testExpression(t, input, model.NumberExpr(-1.0))
+
+	input = "(* 1 2)"
+	testExpression(t, input, model.NumberExpr(2.0))
+
+	input = "(/ 1 2)"
+	testExpression(t, input, model.NumberExpr(0.5))
+}
+
+func TestNestedArithmetic(t *testing.T) {
+	input := "(+ 1 (+ 2 3))"
+	testExpression(t, input, model.NumberExpr(6.0))
+}
+
+func TestSmoke(t *testing.T) {
+	input := "(print \"Hello, World!\")"
+	testExpression(t, input, model.NullExpr())
+}
+
+func TestComparison(t *testing.T) {
+	input := "(= 1 1)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(= 1 2)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(= 1 (+ 1 1))"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(= 1 (+ 1 0))"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(!= 1 1)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(!= 1 2)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(< 1 2)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(< 2 1)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(< 1 1)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(<= 1 2)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(<= 2 1)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(<= 1 1)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(> 1 2)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(> 2 1)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(> 1 1)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(>= 1 2)"
+	testExpression(t, input, model.BoolExpr(false))
+
+	input = "(>= 2 1)"
+	testExpression(t, input, model.BoolExpr(true))
+
+	input = "(>= 1 1)"
+	testExpression(t, input, model.BoolExpr(true))
 }
