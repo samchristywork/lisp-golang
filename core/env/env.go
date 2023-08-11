@@ -21,7 +21,8 @@ func AddEnv(env *Env, key string, value *Expr) {
 
 func Lookup(env *Env, key string) *Expr {
 	if env == nil {
-		return &Expr{Kind: UNKNOWN, Value: nil, Next: nil, Child: nil}
+		fmt.Println("Environment not defined")
+		os.Exit(1)
 	}
 
 	value := env.Data[key]
