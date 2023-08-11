@@ -29,7 +29,7 @@ func notEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 func lessThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	a, b := expectTwoOperands(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
+	if a.Kind != model.NUMBER || b.Kind != model.NUMBER {
 		panic("lessThan requires two numbers")
 	}
 
@@ -39,7 +39,7 @@ func lessThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
 func greaterThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	a, b := expectTwoOperands(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
+	if a.Kind != model.NUMBER || b.Kind != model.NUMBER {
 		panic("greaterThan requires two numbers")
 	}
 
@@ -49,7 +49,7 @@ func greaterThan(operands []*Expr, env *Env, evaluator Callback) *Expr {
 func lessThanEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	a, b := expectTwoOperands(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
+	if a.Kind != model.NUMBER || b.Kind != model.NUMBER {
 		panic("lessThanEquals requires two numbers")
 	}
 
@@ -59,7 +59,7 @@ func lessThanEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 func greaterThanEquals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	a, b := expectTwoOperands(operands, env, evaluator)
 
-	if a.Kind != NUMBER || b.Kind != NUMBER {
+	if a.Kind != model.NUMBER || b.Kind != model.NUMBER {
 		panic("greaterThanEquals requires two numbers")
 	}
 

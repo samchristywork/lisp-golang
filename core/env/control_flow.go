@@ -42,7 +42,7 @@ func loop(operands []*Expr, env *Env, evaluator Callback) *Expr {
 			ret = evaluator(operand, env)
 		}
 
-		if ret.Kind == BOOL {
+		if ret.Kind == model.BOOL {
 			if !ret.Value.(bool) {
 				break
 			}
@@ -61,7 +61,7 @@ func assert(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 	assertion := evaluator(operands[0], env)
 
-	if assertion.Kind != BOOL {
+	if assertion.Kind != model.BOOL {
 		panic("assertion must be a boolean")
 	}
 

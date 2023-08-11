@@ -2,13 +2,14 @@ package env
 
 import (
 	"fmt"
+	"lisp/model"
 )
 
 func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	if len(operands) == 0 {
 		PrintEnv(env)
 
-		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+		return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
 	}
 
 	if len(operands) != 1 {
@@ -17,7 +18,7 @@ func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 	key := operands[0]
 
-	if key.Kind != SYMBOL {
+	if key.Kind != model.SYMBOL {
 		panic("env requires a symbol")
 	}
 
@@ -26,7 +27,7 @@ func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	fmt.Printf("%s: ", key.Value.(string))
 	PrintNode(value)
 
-	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func inspect(e *Expr, env *Env, evaluator Callback) *Expr {
@@ -41,7 +42,7 @@ func inspect(e *Expr, env *Env, evaluator Callback) *Expr {
 
 	//printExpr(e.Value.(*Expr))
 
-	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
 }
 
 func lookupValue(e *Expr, env *Env, evaluator Callback) *Expr {

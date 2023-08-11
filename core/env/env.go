@@ -7,21 +7,6 @@ import (
 	"os/exec"
 )
 
-// TODO: Fix this
-const (
-	UNKNOWN = iota
-	BOOL
-	FUNCTION
-	LAMBDA
-	LIST
-	NULL
-	NUMBER
-	PAMBDA
-	STRING
-	SYMBOL
-	SHARK
-)
-
 type Expr = model.Expr
 type Callback func(*Expr, *Env) *Expr
 
@@ -93,7 +78,7 @@ func system(e *Expr, env *Env, evaluator Callback) *Expr {
 	command.Stderr = os.Stderr
 	command.Run()
 
-	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return model.NullExpr()
 }
 
 func InitEnv() *Env {

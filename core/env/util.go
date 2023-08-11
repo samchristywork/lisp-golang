@@ -10,5 +10,5 @@ func typeof(kind int) string {
 			return value
 		}
 	}
-	return "TYPE NOT FOUND"
+	return "Type not found"
 }

@@ -2,6 +2,7 @@ package env
 
 import (
 	"fmt"
+	"lisp/model"
 )
 
 func __print(e *Expr, env *Env, evaluator Callback) {
@@ -15,5 +16,5 @@ func _print(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 	fmt.Println()
 
-	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return model.NullExpr()
 }
