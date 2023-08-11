@@ -4,17 +4,6 @@ import (
 	"lisp/model"
 )
 
-func expectTwoOperands(operands []*Expr, env *Env, evaluator Callback) (*Expr, *Expr) {
-	if len(operands) != 2 {
-		panic("requires two operands")
-	}
-
-	a := evaluator(operands[0], env)
-	b := evaluator(operands[1], env)
-
-	return a, b
-}
-
 func equals(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	a, b := expectTwoOperands(operands, env, evaluator)
 

@@ -103,9 +103,9 @@ func InitEnv() *Env {
 	AddEnv(env, "assert", &Expr{Kind: FUNCTION, Value: assert, Next: nil, Child: nil})
 	AddEnv(env, "begin", &Expr{Kind: FUNCTION, Value: begin, Next: nil, Child: nil})
 	AddEnv(env, "define", &Expr{Kind: FUNCTION, Value: define, Next: nil, Child: nil})
-	//AddEnv(env, "if", &Expr{Kind: FUNCTION, Value: _if, Next: nil, Child: nil})
+	AddEnv(env, "if", &Expr{Kind: FUNCTION, Value: _if, Next: nil, Child: nil})
 	//AddEnv(env, "lambda", &Expr{Kind: FUNCTION, Value: lambda, Next: nil, Child: nil})
-	//AddEnv(env, "loop", &Expr{Kind: FUNCTION, Value: loop, Next: nil, Child: nil})
+	AddEnv(env, "loop", &Expr{Kind: FUNCTION, Value: loop, Next: nil, Child: nil})
 	//AddEnv(env, "pambda", &Expr{Kind: FUNCTION, Value: pambda, Next: nil, Child: nil})
 	//AddEnv(env, "set", &Expr{Kind: FUNCTION, Value: set, Next: nil, Child: nil})
 
@@ -117,11 +117,11 @@ func InitEnv() *Env {
 
 	//// Comparison
 	AddEnv(env, "=", &Expr{Kind: FUNCTION, Value: equals, Next: nil, Child: nil})
-	//AddEnv(env, "!=", &Expr{Kind: FUNCTION, Value: notEquals, Next: nil, Child: nil})
-	//AddEnv(env, "<", &Expr{Kind: FUNCTION, Value: lessThan, Next: nil, Child: nil})
-	//AddEnv(env, ">", &Expr{Kind: FUNCTION, Value: greaterThan, Next: nil, Child: nil})
-	//AddEnv(env, "<=", &Expr{Kind: FUNCTION, Value: lessThanEquals, Next: nil, Child: nil})
-	//AddEnv(env, ">=", &Expr{Kind: FUNCTION, Value: greaterThanEquals, Next: nil, Child: nil})
+	AddEnv(env, "!=", &Expr{Kind: FUNCTION, Value: notEquals, Next: nil, Child: nil})
+	AddEnv(env, "<", &Expr{Kind: FUNCTION, Value: lessThan, Next: nil, Child: nil})
+	AddEnv(env, ">", &Expr{Kind: FUNCTION, Value: greaterThan, Next: nil, Child: nil})
+	AddEnv(env, "<=", &Expr{Kind: FUNCTION, Value: lessThanEquals, Next: nil, Child: nil})
+	AddEnv(env, ">=", &Expr{Kind: FUNCTION, Value: greaterThanEquals, Next: nil, Child: nil})
 
 	//// Logic
 	//AddEnv(env, "and", &Expr{Kind: FUNCTION, Value: and, Next: nil, Child: nil})

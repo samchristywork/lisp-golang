@@ -2,23 +2,27 @@ package env
 
 import (
 	"fmt"
+	"lisp/model"
 	"os"
 )
 
-func _if(e *Expr, env *Env, evaluator Callback) *Expr {
-	condition := evaluator(e, env)
+func _if(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	if len(operands) != 3 {
+		panic("if requires three arguments")
+	}
+
+	condition := evaluator(operands[0], env)
 
 	if condition.Value.(bool) { // Consequent
-		e.Next.Next = nil
-		return evaluator(e.Next, env)
+		return evaluator(operands[1], env)
 
 	} else { // Alternative
-		return evaluator(e.Next.Next, env)
+		return evaluator(operands[2], env)
 	}
 }
 
 func begin(operands []*Expr, env *Env, evaluator Callback) *Expr {
-	ret := &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	ret := model.NullExpr()
 
 	for _, operand := range operands {
 		ret = evaluator(operand, env)
@@ -27,29 +31,24 @@ func begin(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	return ret
 }
 
-func loop(e *Expr, env *Env, evaluator Callback) *Expr {
-	ret := &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
-
-	head := e
+func loop(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	ret := model.NullExpr()
 
 	for {
-		ret = evaluator(e, env)
-
-		if e.Next == nil {
-			if ret.Kind == BOOL {
-				if ret.Value.(bool) {
-				} else {
-					break
-				}
-			} else {
-				panic("loop requires a boolean expression")
-			}
-
-			e = head
-			continue
+		fmt.Printf("loop\n")
+		for _, operand := range operands {
+			fmt.Printf("loop operand\n")
+			PrintNode(operand)
+			ret = evaluator(operand, env)
 		}
 
-		e = e.Next
+		if ret.Kind == BOOL {
+			if !ret.Value.(bool) {
+				break
+			}
+		} else {
+			panic("loop requires a boolean expression")
+		}
 	}
 
 	return ret
@@ -67,11 +66,10 @@ func assert(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	}
 
 	if assertion.Value.(bool) {
-		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
-
+		return model.NullExpr()
 	} else {
 		fmt.Printf("Assertion failed.\n")
 		os.Exit(1)
-		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+		return model.NullExpr()
 	}
 }
