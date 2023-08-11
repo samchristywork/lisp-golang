@@ -1,24 +1,35 @@
 package env
 
 import (
-// "fmt"
+	"fmt"
 )
 
-func showEnv(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	// TODO: Fix
-	//if e.Kind == SYMBOL {
-	//	key := e.Value.(string)
-	//	value := lookup(env, key)
-	//	printNode(value)
+func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	if len(operands) == 0 {
+		PrintEnv(env)
 
-	//} else {
-	//	printEnv(env)
-	//}
+		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	}
 
-	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	if len(operands) != 1 {
+		panic("env requires one argument")
+	}
+
+	key := operands[0]
+
+	if key.Kind != SYMBOL {
+		panic("env requires a symbol")
+	}
+
+	value := Lookup(env, key.Value.(string))
+
+	fmt.Printf("%s: ", key.Value.(string))
+	PrintNode(value)
+
+	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
-func inspect(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
+func inspect(e *Expr, env *Env, evaluator Callback) *Expr {
 	// TODO: Fix
 	//e = evaluator(&e, env)
 
@@ -30,11 +41,11 @@ func inspect(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 
 	//printExpr(e.Value.(*Expr))
 
-	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
 
-func lookupValue(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	e = evaluator(&e, env)
+func lookupValue(e *Expr, env *Env, evaluator Callback) *Expr {
+	e = evaluator(e, env)
 	value := Lookup(env, e.Value.(string))
 	return value
 }

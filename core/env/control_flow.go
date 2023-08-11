@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func _if(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	condition := evaluator(&e, env)
+func _if(e *Expr, env *Env, evaluator Callback) *Expr {
+	condition := evaluator(e, env)
 
 	if condition.Value.(bool) { // Consequent
 		e.Next.Next = nil
@@ -17,29 +17,23 @@ func _if(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	}
 }
 
-func begin(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	ret := Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+func begin(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	ret := &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
-	for {
-		ret = evaluator(&e, env)
-
-		if e.Next == nil {
-			break
-		}
-
-		e = *e.Next
+	for _, operand := range operands {
+		ret = evaluator(operand, env)
 	}
 
 	return ret
 }
 
-func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	ret := Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+func loop(e *Expr, env *Env, evaluator Callback) *Expr {
+	ret := &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
 	head := e
 
 	for {
-		ret = evaluator(&e, env)
+		ret = evaluator(e, env)
 
 		if e.Next == nil {
 			if ret.Kind == BOOL {
@@ -55,25 +49,29 @@ func loop(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 			continue
 		}
 
-		e = *e.Next
+		e = e.Next
 	}
 
 	return ret
 }
 
-func assert(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	assertion := evaluator(&e, env)
+func assert(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	if len(operands) != 1 {
+		panic("assert requires one argument")
+	}
+
+	assertion := evaluator(operands[0], env)
 
 	if assertion.Kind != BOOL {
 		panic("assertion must be a boolean")
 	}
 
 	if assertion.Value.(bool) {
-		return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 
 	} else {
-		fmt.Printf("Assertion failed: %v\n", e)
+		fmt.Printf("Assertion failed.\n")
 		os.Exit(1)
-		return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+		return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 	}
 }
