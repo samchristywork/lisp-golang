@@ -4,17 +4,16 @@ import (
 	"fmt"
 )
 
-func __print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) {
-	fmt.Print(evaluator(&e, env).Value)
-
-	if e.Next != nil {
-		__print(*e.Next, env, evaluator)
-	}
+func __print(e *Expr, env *Env, evaluator Callback) {
+	fmt.Print(evaluator(e, env).Value)
 }
 
-func _print(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
-	__print(e, env, evaluator)
+func _print(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	for _, operand := range operands {
+		__print(operand, env, evaluator)
+	}
+
 	fmt.Println()
 
-	return Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
+	return &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil}
 }
