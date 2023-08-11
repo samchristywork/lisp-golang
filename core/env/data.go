@@ -1,4 +1,4 @@
-package core
+package env
 
 func set(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	key := evaluator(&e, env)

@@ -1,4 +1,4 @@
-package core
+package env
 
 func equals(e Expr, env *Env, evaluator func(*Expr, *Env) Expr) Expr {
 	a := evaluator(&e, env)

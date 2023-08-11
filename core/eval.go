@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	environment "lisp/core/env"
 	"lisp/model"
 )
