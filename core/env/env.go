@@ -63,52 +63,50 @@ func system(operators []*Expr, env *Env, evaluator Callback) *Expr {
 func InitEnv() *Env {
 	env := &Env{nil, make(map[string]*Expr)}
 
-	//// Data and Control Flow
-	AddEnv(env, "assert", &Expr{Kind: FUNCTION, Value: assert, Next: nil, Child: nil})
-	AddEnv(env, "begin", &Expr{Kind: FUNCTION, Value: begin, Next: nil, Child: nil})
-	AddEnv(env, "define", &Expr{Kind: FUNCTION, Value: define, Next: nil, Child: nil})
-	AddEnv(env, "if", &Expr{Kind: FUNCTION, Value: _if, Next: nil, Child: nil})
-	//AddEnv(env, "lambda", &Expr{Kind: FUNCTION, Value: lambda, Next: nil, Child: nil})
-	AddEnv(env, "loop", &Expr{Kind: FUNCTION, Value: loop, Next: nil, Child: nil})
-	//AddEnv(env, "pambda", &Expr{Kind: FUNCTION, Value: pambda, Next: nil, Child: nil})
-	//AddEnv(env, "set", &Expr{Kind: FUNCTION, Value: set, Next: nil, Child: nil})
+	// Data and Control Flow
+	AddEnv(env, "assert", model.FunctionExpr(assert))
+	AddEnv(env, "begin", model.FunctionExpr(begin))
+	AddEnv(env, "define", model.FunctionExpr(define))
+	AddEnv(env, "if", model.FunctionExpr(_if))
+	AddEnv(env, "loop", model.FunctionExpr(loop))
+	//AddEnv(env, "set", model.FunctionExpr(set))
 
 	// Arithmetic
-	AddEnv(env, "+", &Expr{Kind: FUNCTION, Value: plus, Next: nil, Child: nil})
-	AddEnv(env, "-", &Expr{Kind: FUNCTION, Value: minus, Next: nil, Child: nil})
-	AddEnv(env, "*", &Expr{Kind: FUNCTION, Value: multiply, Next: nil, Child: nil})
-	AddEnv(env, "/", &Expr{Kind: FUNCTION, Value: divide, Next: nil, Child: nil})
+	AddEnv(env, "+", model.FunctionExpr(plus))
+	AddEnv(env, "-", model.FunctionExpr(minus))
+	AddEnv(env, "*", model.FunctionExpr(multiply))
+	AddEnv(env, "/", model.FunctionExpr(divide))
 
-	//// Comparison
-	AddEnv(env, "=", &Expr{Kind: FUNCTION, Value: equals, Next: nil, Child: nil})
-	AddEnv(env, "!=", &Expr{Kind: FUNCTION, Value: notEquals, Next: nil, Child: nil})
-	AddEnv(env, "<", &Expr{Kind: FUNCTION, Value: lessThan, Next: nil, Child: nil})
-	AddEnv(env, ">", &Expr{Kind: FUNCTION, Value: greaterThan, Next: nil, Child: nil})
-	AddEnv(env, "<=", &Expr{Kind: FUNCTION, Value: lessThanEquals, Next: nil, Child: nil})
-	AddEnv(env, ">=", &Expr{Kind: FUNCTION, Value: greaterThanEquals, Next: nil, Child: nil})
+	// Comparison
+	AddEnv(env, "=", model.FunctionExpr(equals))
+	AddEnv(env, "!=", model.FunctionExpr(notEquals))
+	AddEnv(env, "<", model.FunctionExpr(lessThan))
+	AddEnv(env, ">", model.FunctionExpr(greaterThan))
+	AddEnv(env, "<=", model.FunctionExpr(lessThanEquals))
+	AddEnv(env, ">=", model.FunctionExpr(greaterThanEquals))
 
-	//// Logic
-	//AddEnv(env, "and", &Expr{Kind: FUNCTION, Value: and, Next: nil, Child: nil})
-	//AddEnv(env, "or", &Expr{Kind: FUNCTION, Value: or, Next: nil, Child: nil})
-	//AddEnv(env, "not", &Expr{Kind: FUNCTION, Value: not, Next: nil, Child: nil})
-	//AddEnv(env, "xor", &Expr{Kind: FUNCTION, Value: xor, Next: nil, Child: nil})
-	//AddEnv(env, "nor", &Expr{Kind: FUNCTION, Value: nor, Next: nil, Child: nil})
-	//AddEnv(env, "nand", &Expr{Kind: FUNCTION, Value: nand, Next: nil, Child: nil})
-	//AddEnv(env, "xnor", &Expr{Kind: FUNCTION, Value: xnor, Next: nil, Child: nil})
+	// Logic
+	AddEnv(env, "and", model.FunctionExpr(and))
+	AddEnv(env, "or", model.FunctionExpr(or))
+	AddEnv(env, "not", model.FunctionExpr(not))
+	AddEnv(env, "xor", model.FunctionExpr(xor))
+	AddEnv(env, "nor", model.FunctionExpr(nor))
+	AddEnv(env, "nand", model.FunctionExpr(nand))
+	AddEnv(env, "xnor", model.FunctionExpr(xnor))
 
-	//// Constants
-	AddEnv(env, "true", &Expr{Kind: BOOL, Value: true, Next: nil, Child: nil})
-	AddEnv(env, "false", &Expr{Kind: BOOL, Value: false, Next: nil, Child: nil})
-	//AddEnv(env, "null", &Expr{Kind: NULL, Value: nil, Next: nil, Child: nil})
+	// Constants
+	AddEnv(env, "true", model.BoolExpr(true))
+	AddEnv(env, "false", model.BoolExpr(false))
+	AddEnv(env, "null", model.NullExpr())
 
-	//// I/O
-	AddEnv(env, "print", &Expr{Kind: FUNCTION, Value: _print, Next: nil, Child: nil})
-	//AddEnv(env, "system", &Expr{Kind: FUNCTION, Value: system, Next: nil, Child: nil})
+	// I/O
+	AddEnv(env, "print", model.FunctionExpr(_print))
+	AddEnv(env, "system", model.FunctionExpr(system))
 
-	//// Debug
-	AddEnv(env, "env", &Expr{Kind: FUNCTION, Value: showEnv, Next: nil, Child: nil})
-	//AddEnv(env, "inspect", &Expr{Kind: FUNCTION, Value: inspect, Next: nil, Child: nil})
-	//AddEnv(env, "lookup", &Expr{Kind: FUNCTION, Value: lookupValue, Next: nil, Child: nil})
+	// Debug
+	AddEnv(env, "env", model.FunctionExpr(showEnv))
+	//AddEnv(env, "inspect", model.FunctionExpr(inspect))
+	//AddEnv(env, "lookup", model.FunctionExpr(lookupValue))
 
 	return env
 }
