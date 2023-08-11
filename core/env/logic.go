@@ -1,83 +1,53 @@
 package env
 
-func and(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
+import (
+	"lisp/model"
+)
 
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("and requires two booleans")
-	}
+func and(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
-	return &Expr{Kind: BOOL, Value: a.Value.(bool) && b.Value.(bool), Next: nil, Child: nil}
+	return model.BoolExpr(a.Value.(bool) && b.Value.(bool))
 }
 
-func or(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
+func or(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("and requires two booleans")
-	}
-
-	return &Expr{Kind: BOOL, Value: a.Value.(bool) || b.Value.(bool), Next: nil, Child: nil}
+	return model.BoolExpr(a.Value.(bool) || b.Value.(bool))
 }
 
-func not(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
+func not(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a := expectOneBool(operators, env, evaluator)
 
-	if a.Kind != BOOL {
-		panic("not requires a boolean")
-	}
-
-	return &Expr{Kind: BOOL, Value: !a.Value.(bool), Next: nil, Child: nil}
+	return model.BoolExpr(!a.Value.(bool))
 }
 
-func xor(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("xor requires two booleans")
-	}
+func xor(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
 	left := a.Value.(bool) && !b.Value.(bool)
 	right := !a.Value.(bool) && b.Value.(bool)
 
-	return &Expr{Kind: BOOL, Value: left || right, Next: nil, Child: nil}
+	return model.BoolExpr(left || right)
 }
 
-func nor(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
+func nor(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("nor requires two booleans")
-	}
-
-	return &Expr{Kind: BOOL, Value: !(a.Value.(bool) || b.Value.(bool)), Next: nil, Child: nil}
+	return model.BoolExpr(!(a.Value.(bool) || b.Value.(bool)))
 }
 
-func nand(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
+func nand(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("nand requires two booleans")
-	}
-
-	return &Expr{Kind: BOOL, Value: !(a.Value.(bool) && b.Value.(bool)), Next: nil, Child: nil}
+	return model.BoolExpr(!(a.Value.(bool) && b.Value.(bool)))
 }
 
-func xnor(e *Expr, env *Env, evaluator Callback) *Expr {
-	a := evaluator(e, env)
-	b := evaluator(e.Next, env)
-
-	if a.Kind != BOOL || b.Kind != BOOL {
-		panic("xnor requires two booleans")
-	}
+func xnor(operators []*Expr, env *Env, evaluator Callback) *Expr {
+	a, b := expectTwoBools(operators, env, evaluator)
 
 	left := a.Value.(bool) && !b.Value.(bool)
 	right := !a.Value.(bool) && b.Value.(bool)
 
-	return &Expr{Kind: BOOL, Value: !(left || right), Next: nil, Child: nil}
+	return model.BoolExpr(!(left || right))
 }
