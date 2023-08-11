@@ -67,7 +67,7 @@ func PrintExpr(expr *Expr) {
 }
 
 func PrintEnvLine(expr *Expr) {
-	fmt.Printf("%s ", typeof(expr.Kind))
+	fmt.Printf("%s ", util.Typeof(expr.Kind))
 	fmt.Printf(" %v ", expr.Value)
 	if expr.Next != nil {
 		fmt.Printf("next: %v ", expr.Next)
