@@ -105,6 +105,7 @@ func InitEnv() *Env {
 
 	// I/O
 	AddEnv(env, "print", model.FunctionExpr(_print))
+	AddEnv(env, "println", model.FunctionExpr(_println))
 	AddEnv(env, "system", model.FunctionExpr(system))
 
 	// Debug

@@ -74,7 +74,7 @@ func File() {
 	}
 
 	env := environment.InitEnv()
-	expression := Parse("(begin (print \"Program Begin\")\n" + content + ")")
+	expression := Parse("(begin (println \"Program Begin\")\n" + content + ")")
 
 	eval(expression, env)
 }

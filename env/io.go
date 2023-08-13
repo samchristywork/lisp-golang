@@ -14,6 +14,12 @@ func _print(operands []*Expr, env *Env, evaluator Callback) *Expr {
 		__print(operand, env, evaluator)
 	}
 
+	return model.NullExpr()
+}
+
+func _println(operands []*Expr, env *Env, evaluator Callback) *Expr {
+	_print(operands, env, evaluator)
+
 	fmt.Println()
 
 	return model.NullExpr()
