@@ -64,6 +64,10 @@ func evalAtom(expr *Expr, env *environment.Env) *Expr {
 			panic("eval: unknown symbol")
 		}
 
+		if value.Kind == model.SYMBOL && value.Value.(string) == expr.Value.(string) {
+			panic("eval: loop detected")
+		}
+
 		return eval(value, env)
 	} else if expr.Kind == model.NUMBER {
 		return expr
