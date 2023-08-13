@@ -162,3 +162,55 @@ func TestComparison(t *testing.T) {
 	input = "(>= 1 1)"
 	testExpression(t, input, model.BoolExpr(true))
 }
+
+func TestDefine(t *testing.T) {
+	input := "(begin (define (square x) (* x x))"
+	input += "(define (cube y) (* y (square y)))"
+	input += "(cube 2))"
+	testExpression(t, input, model.NumberExpr(8.0))
+
+	input = "(begin (define (average a b) (/ (+ a b) 2))"
+	input += "(average 1 2))"
+	testExpression(t, input, model.NumberExpr(1.5))
+}
+
+func TestIf(t *testing.T) {
+	input := "(if (= 1 1) 1 2)"
+	testExpression(t, input, model.NumberExpr(1.0))
+
+	input = "(if (= 1 2) 1 2)"
+	testExpression(t, input, model.NumberExpr(2.0))
+
+	input = "(if (= 1 1) (+ 5 6) 2)"
+	testExpression(t, input, model.NumberExpr(11.0))
+}
+
+func TestScope(t *testing.T) {
+	input := "(begin"
+	input += "(define x 5)"
+	input += "(begin"
+	input += "(define x 6)"
+	input += "x)x)"
+	testExpression(t, input, model.NumberExpr(5.0))
+
+	input = "(begin"
+	input += "(define x 5)"
+	input += "(begin"
+	input += "(define x 6)"
+	input += "x))"
+	testExpression(t, input, model.NumberExpr(5.0))
+
+	input = "(begin"
+	input += "(define (add-one x) (+ x 1))"
+	input += "(define (double-add-one x) (* (add-one x) 2))"
+	input += "(env)"
+	input += "(double-add-one 5))"
+	testExpression(t, input, model.NumberExpr(12.0))
+}
+
+func TestTailRecursion(t *testing.T) {
+	input := "(begin"
+	input += "(define (factorial n) (if (= n 1) 1 (* n (factorial (- n 1)))))"
+	input += "(factorial 5))"
+	testExpression(t, input, model.NumberExpr(120.0))
+}
