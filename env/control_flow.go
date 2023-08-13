@@ -35,10 +35,7 @@ func loop(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	ret := model.NullExpr()
 
 	for {
-		fmt.Printf("loop\n")
 		for _, operand := range operands {
-			fmt.Printf("loop operand\n")
-			PrintNode(operand)
 			ret = evaluator(operand, env)
 		}
 

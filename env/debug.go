@@ -9,7 +9,7 @@ func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	if len(operands) == 0 {
 		PrintEnv(env)
 
-		return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
+		return model.NullExpr()
 	}
 
 	if len(operands) != 1 {
@@ -27,7 +27,7 @@ func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	fmt.Printf("%s: ", key.Value.(string))
 	PrintNode(value)
 
-	return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
+	return model.NullExpr()
 }
 
 func inspect(e *Expr, env *Env, evaluator Callback) *Expr {
@@ -42,7 +42,7 @@ func inspect(e *Expr, env *Env, evaluator Callback) *Expr {
 
 	//printExpr(e.Value.(*Expr))
 
-	return &Expr{Kind: model.NULL, Value: nil, Next: nil, Child: nil}
+	return model.NullExpr()
 }
 
 func lookupValue(e *Expr, env *Env, evaluator Callback) *Expr {

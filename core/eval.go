@@ -18,11 +18,11 @@ func apply(expr *Expr, env *environment.Env) *Expr {
 		operand = operand.Next
 	}
 
-	if operator.Kind == environment.FUNCTION {
+	if operator.Kind == model.FUNCTION {
 		f := operator.Value.(func([]*Expr, *environment.Env, environment.Callback) *Expr)
 
 		return f(operands, env, eval)
-	} else if operator.Kind == environment.SHARK {
+	} else if operator.Kind == model.LAMBDA {
 		operand := operator.Value.(*Expr).Child.Next
 		body := operator.Child
 
@@ -48,7 +48,7 @@ func evalList(expr *Expr, env *environment.Env) *Expr {
 		return expr
 	}
 
-	if listChild.Kind == environment.SYMBOL {
+	if listChild.Kind == model.SYMBOL {
 		return apply(expr.Child, env)
 	}
 
@@ -56,21 +56,21 @@ func evalList(expr *Expr, env *environment.Env) *Expr {
 }
 
 func evalAtom(expr *Expr, env *environment.Env) *Expr {
-	if expr.Kind == environment.SYMBOL {
+	if expr.Kind == model.SYMBOL {
 		value := environment.Lookup(env, expr.Value.(string))
 
-		if value.Kind == environment.UNKNOWN {
+		if value.Kind == model.UNKNOWN {
 			panic("eval: unknown symbol")
 		}
 
 		return eval(value, env)
-	} else if expr.Kind == environment.NUMBER {
+	} else if expr.Kind == model.NUMBER {
 		return expr
-	} else if expr.Kind == environment.STRING {
+	} else if expr.Kind == model.STRING {
 		return expr
-	} else if expr.Kind == environment.BOOL {
+	} else if expr.Kind == model.BOOL {
 		return expr
-	} else if expr.Kind == environment.NULL {
+	} else if expr.Kind == model.NULL {
 		return expr
 	}
 
@@ -82,7 +82,7 @@ func eval(expr *Expr, env *environment.Env) *Expr {
 		return expr
 	}
 
-	if expr.Kind == environment.LIST {
+	if expr.Kind == model.LIST {
 		return evalList(expr, env)
 	} else {
 		return evalAtom(expr, env)

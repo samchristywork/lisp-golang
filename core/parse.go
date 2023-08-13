@@ -79,20 +79,21 @@ func handleList(expr *Expr, tokens []string) {
 
 func handleAtom(expr *Expr, token string, tokens []string) {
 	if len(token) > 0 && token[0] == '"' { // Handle Strings
-		expr.Kind = environment.STRING
+		expr.Kind = model.STRING
 		expr.Value = token[1 : len(token)-1]
 
 	} else { // Handle Numbers and Symbols
-		expr.Kind = environment.NUMBER
+		expr.Kind = model.NUMBER
 		val, e := strconv.ParseFloat(token, 64)
 
 		expr.Value = val
 
 		if e != nil {
-			expr.Kind = environment.SYMBOL
+			expr.Kind = model.SYMBOL
 			expr.Value = token
 		}
 	}
+
 	if len(tokens) > 0 {
 		next := Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
 		expr.Next = &next
@@ -115,7 +116,7 @@ func buildExpressionTree(expr *Expr, tokens []string) {
 }
 
 func Parse(input string) *Expr {
-	exp := environment.Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
+	exp := model.EmptyListExpr()
 	tokens := tokenize(input)
 	buildExpressionTree(&exp, tokens)
 	return &exp
