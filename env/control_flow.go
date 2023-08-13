@@ -13,6 +13,8 @@ func _if(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 	condition := evaluator(operands[0], env)
 
+	env = NewEnv(env)
+
 	if condition.Value.(bool) { // Consequent
 		return evaluator(operands[1], env)
 
@@ -24,6 +26,8 @@ func _if(operands []*Expr, env *Env, evaluator Callback) *Expr {
 func begin(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	ret := model.NullExpr()
 
+	env = NewEnv(env)
+
 	for _, operand := range operands {
 		ret = evaluator(operand, env)
 	}
@@ -33,6 +37,8 @@ func begin(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 func loop(operands []*Expr, env *Env, evaluator Callback) *Expr {
 	ret := model.NullExpr()
+
+	env = NewEnv(env)
 
 	for {
 		for _, operand := range operands {

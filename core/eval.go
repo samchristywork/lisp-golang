@@ -26,6 +26,7 @@ func apply(expr *Expr, env *environment.Env) *Expr {
 		operand := operator.Value.(*Expr).Child.Next
 		body := operator.Child
 
+		env := environment.NewEnv(env)
 		for operand != nil {
 			environment.AddEnv(env, operand.Value.(string), expr.Next)
 

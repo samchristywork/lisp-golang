@@ -19,6 +19,10 @@ func AddEnv(env *Env, key string, value *Expr) {
 	env.Data[key] = value
 }
 
+func NewEnv(outer *Env) *Env {
+	return &Env{outer, make(map[string]*Expr)}
+}
+
 func Lookup(env *Env, key string) *Expr {
 	if env == nil {
 		fmt.Println("Environment not defined")
