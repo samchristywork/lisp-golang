@@ -12,10 +12,8 @@ const (
 	LIST
 	NULL
 	NUMBER
-	PAMBDA
 	STRING
 	SYMBOL
-	SHARK
 )
 
 var Types = map[int]string{
@@ -26,10 +24,8 @@ var Types = map[int]string{
 	LIST:     "List    ",
 	NULL:     "Null    ",
 	NUMBER:   "Number  ",
-	PAMBDA:   "Pambda  ",
 	STRING:   "String  ",
 	SYMBOL:   "Symbol  ",
-	SHARK:    "Shark   ",
 }
 
 type Expr struct {
