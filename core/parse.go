@@ -65,15 +65,15 @@ func handleList(expr *Expr, tokens []string) {
 	right_paren_index := findRightParen(tokens)
 
 	if right_paren_index != 0 {
-		child := environment.Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
-		expr.Child = &child
-		buildExpressionTree(&child, tokens[:right_paren_index])
+		child := model.EmptyListExpr()
+		expr.Child = child
+		buildExpressionTree(child, tokens[:right_paren_index])
 	}
 
 	if len(tokens) > right_paren_index+1 {
-		next := Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
-		expr.Next = &next
-		buildExpressionTree(&next, tokens[right_paren_index+1:])
+		next := model.EmptyListExpr()
+		expr.Next = next
+		buildExpressionTree(next, tokens[right_paren_index+1:])
 	}
 }
 
@@ -95,9 +95,9 @@ func handleAtom(expr *Expr, token string, tokens []string) {
 	}
 
 	if len(tokens) > 0 {
-		next := Expr{Kind: environment.LIST, Value: nil, Next: nil, Child: nil}
-		expr.Next = &next
-		buildExpressionTree(&next, tokens)
+		next := model.EmptyListExpr()
+		expr.Next = next
+		buildExpressionTree(next, tokens)
 	}
 }
 
@@ -118,6 +118,6 @@ func buildExpressionTree(expr *Expr, tokens []string) {
 func Parse(input string) *Expr {
 	exp := model.EmptyListExpr()
 	tokens := tokenize(input)
-	buildExpressionTree(&exp, tokens)
-	return &exp
+	buildExpressionTree(exp, tokens)
+	return exp
 }
