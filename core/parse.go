@@ -82,6 +82,10 @@ func handleAtom(expr *Expr, token string, tokens []string) {
 		expr.Kind = model.STRING
 		expr.Value = token[1 : len(token)-1]
 
+	} else if token == "true" || token == "false" { // Handle Booleans
+		expr.Kind = model.BOOL
+		expr.Value = token == "true"
+
 	} else { // Handle Numbers and Symbols
 		expr.Kind = model.NUMBER
 		val, e := strconv.ParseFloat(token, 64)
