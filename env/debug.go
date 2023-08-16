@@ -24,8 +24,13 @@ func showEnv(operands []*Expr, env *Env, evaluator Callback) *Expr {
 
 	value := Lookup(env, key.Value.(string))
 
+	if value == nil {
+		panic(fmt.Sprintf("env: %s not found", key.Value.(string)))
+	}
+
 	fmt.Printf("%s: ", key.Value.(string))
-	PrintNode(value)
+	fmt.Printf("%v ", value)
+	PrintExpr(value)
 
 	return model.NullExpr()
 }

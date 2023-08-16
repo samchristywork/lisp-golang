@@ -28,8 +28,7 @@ func Repl() {
 		}
 
 		if input == "env" || input == "." {
-			fmt.Println("TODO: Implement env")
-			//printEnv(env)
+			environment.PrintEnv(env)
 			continue
 		}
 
