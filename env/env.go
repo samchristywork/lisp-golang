@@ -23,13 +23,30 @@ func NewEnv(outer *Env) *Env {
 	return &Env{outer, make(map[string]*Expr)}
 }
 
+func _lookup(env *Env, key string) *Expr {
+	if env.Outer != nil {
+		value := _lookup(env.Outer, key)
+		if value != nil {
+			return value
+		}
+	}
+
+	value := env.Data[key]
+
+	if value != nil {
+		return value
+	} else {
+		return nil
+	}
+}
+
 func Lookup(env *Env, key string) *Expr {
 	if env == nil {
 		fmt.Println("Environment not defined")
 		os.Exit(1)
 	}
 
-	value := env.Data[key]
+	value := _lookup(env, key)
 
 	if value == nil {
 		fmt.Println("Unknown symbol: " + key)
