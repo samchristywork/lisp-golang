@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"lisp/model"
 	"strconv"
 )
@@ -105,18 +106,21 @@ func handleAtom(expr *Expr, token string, tokens []string) {
 	}
 }
 
-func buildExpressionTree(expr *Expr, tokens []string) {
+func buildExpressionTree(expr *Expr, tokens []string) bool {
 	token := tokens[0]
 	tokens = tokens[1:]
 
 	if token == "(" {
 		handleList(expr, tokens)
 	} else if token == ")" {
-		panic("unexpected )")
+		fmt.Println("unexpected )")
+		return false
 
 	} else {
 		handleAtom(expr, token, tokens)
 	}
+
+	return true
 }
 
 func Parse(input string) *Expr {
