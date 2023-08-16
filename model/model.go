@@ -1,5 +1,9 @@
 package model
 
+import (
+	"fmt"
+)
+
 const (
 	UNKNOWN = iota
 	BOOL
@@ -77,5 +81,5 @@ func NullExpr() *Expr {
 }
 
 func BoolExpr(value bool) *Expr {
-	return &Expr{Kind: NULL, Value: value, Next: nil, Child: nil}
+	return &Expr{Kind: BOOL, Value: value, Next: nil, Child: nil}
 }
