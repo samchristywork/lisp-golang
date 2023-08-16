@@ -83,3 +83,11 @@ func NullExpr() *Expr {
 func BoolExpr(value bool) *Expr {
 	return &Expr{Kind: BOOL, Value: value, Next: nil, Child: nil}
 }
+
+func FunctionExpr(value interface{}) *Expr {
+	return &Expr{Kind: FUNCTION, Value: value, Next: nil, Child: nil}
+}
+
+func EmptyListExpr() *Expr {
+	return &Expr{Kind: LIST, Value: nil, Next: nil, Child: nil}
+}
