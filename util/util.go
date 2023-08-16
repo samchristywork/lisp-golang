@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"lisp/model"
 )
 
 func Blue() {
@@ -30,4 +31,13 @@ func Cyan() {
 
 func Reset() {
 	fmt.Print("\033[0m")
+}
+
+func Typeof(kind int) string {
+	for key, value := range model.Types {
+		if key == kind {
+			return value
+		}
+	}
+	return "Type not found"
 }
