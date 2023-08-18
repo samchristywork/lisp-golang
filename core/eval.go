@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	environment "lisp/env"
 	"lisp/model"
 )
@@ -37,7 +38,8 @@ func apply(expr *Expr, env *environment.Env) *Expr {
 		ret := evalList(body, env)
 		return ret
 	} else {
-		panic("apply: unknown operator")
+		fmt.Println("apply: unknown operator")
+		return nil
 	}
 }
 
@@ -61,11 +63,13 @@ func evalAtom(expr *Expr, env *environment.Env) *Expr {
 		value := environment.Lookup(env, expr.Value.(string))
 
 		if value.Kind == model.UNKNOWN {
-			panic("eval: unknown symbol")
+			fmt.Println("eval: unknown symbol")
+			return nil
 		}
 
 		if value.Kind == model.SYMBOL && value.Value.(string) == expr.Value.(string) {
-			panic("eval: loop detected")
+			fmt.Println("eval: loop detected")
+			return nil
 		}
 
 		return eval(value, env)
@@ -79,7 +83,8 @@ func evalAtom(expr *Expr, env *environment.Env) *Expr {
 		return expr
 	}
 
-	panic("eval: unknown kind")
+	fmt.Println("eval: unknown kind")
+	return nil
 }
 
 func eval(expr *Expr, env *environment.Env) *Expr {
