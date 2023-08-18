@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func findRightParen(tokens []string) int {
+func findRightParen(tokens []string) *int {
 	count := 1
 	for i, token := range tokens {
 		if token == "(" {
@@ -15,10 +15,12 @@ func findRightParen(tokens []string) int {
 			count--
 		}
 		if count == 0 {
-			return i
+			return &i
 		}
 	}
-	panic("unbalanced parentheses")
+
+	fmt.Println("unbalanced parentheses")
+	return nil
 }
 
 func tokenize(input string) []string {
@@ -62,20 +64,26 @@ func tokenize(input string) []string {
 	return tokens
 }
 
-func handleList(expr *Expr, tokens []string) {
+func handleList(expr *Expr, tokens []string) bool {
 	right_paren_index := findRightParen(tokens)
 
-	if right_paren_index != 0 {
-		child := model.EmptyListExpr()
-		expr.Child = child
-		buildExpressionTree(child, tokens[:right_paren_index])
+	if right_paren_index == nil {
+		return false
 	}
 
-	if len(tokens) > right_paren_index+1 {
+	if *right_paren_index != 0 {
+		child := model.EmptyListExpr()
+		expr.Child = child
+		buildExpressionTree(child, tokens[:*right_paren_index])
+	}
+
+	if len(tokens) > *right_paren_index+1 {
 		next := model.EmptyListExpr()
 		expr.Next = next
-		buildExpressionTree(next, tokens[right_paren_index+1:])
+		buildExpressionTree(next, tokens[*right_paren_index+1:])
 	}
+
+	return true
 }
 
 func handleAtom(expr *Expr, token string, tokens []string) {
@@ -111,7 +119,9 @@ func buildExpressionTree(expr *Expr, tokens []string) bool {
 	tokens = tokens[1:]
 
 	if token == "(" {
-		handleList(expr, tokens)
+		if !handleList(expr, tokens) {
+			return false
+		}
 	} else if token == ")" {
 		fmt.Println("unexpected )")
 		return false
@@ -126,6 +136,9 @@ func buildExpressionTree(expr *Expr, tokens []string) bool {
 func Parse(input string) *Expr {
 	exp := model.EmptyListExpr()
 	tokens := tokenize(input)
-	buildExpressionTree(exp, tokens)
+	if !buildExpressionTree(exp, tokens) {
+		return nil
+	}
+
 	return exp
 }
